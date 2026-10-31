@@ -2,10 +2,18 @@ package com.example.dreamdiary.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
+// Светлая тема
+val Lavender = Color(0xFF8D7AB8)
+val LavenderLight = Color(0xFFE9E1F5)
+val DreamBackground = Color(0xFFFAF7FC)
+val DreamSurface = Color(0xFFFFFFFF)
+val DreamText = Color(0xFF30283D)
+val DreamSecondaryText = Color(0xFF81778F)
+val DreamAccent = Color(0xFFD9C8F0)
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
+// Тёмная тема
+val LavenderDark = Color(0xFFCCB8F0)
+val DarkBackground = Color(0xFF191521)
+val DarkSurface = Color(0xFF262132)
+val DarkText = Color(0xFFF2ECFA)
+val DarkSecondaryText = Color(0xFFB9AEC9)
