@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import com.example.dreamdiary.screens.HomeScreen
 import com.example.dreamdiary.screens.DreamsScreen
 import com.example.dreamdiary.screens.ProfileScreen
+import androidx.compose.material3.Text
 
 @Composable
 fun AppNavHost(
@@ -19,16 +20,32 @@ fun AppNavHost(
         startDestination = Destination.Home.route,
         modifier = modifier
     ) {
-        composable(route = Destination.Home.route) {
+        composable(Destination.Home.route) {
             HomeScreen(navController)
         }
 
-        composable(route = Destination.Dreams.route) {
+        composable(Destination.Dreams.route) {
             DreamsScreen()
         }
 
-        composable(route = Destination.Profile.route) {
+        composable(Destination.Profile.route) {
             ProfileScreen(navController)
+        }
+
+        composable(Destination.Calendar.route) {
+            Text("Календарь сновидений")
+        }
+
+        composable(Destination.Statistics.route) {
+            Text("Статистика настроений")
+        }
+
+        composable(Destination.Constellation.route) {
+            Text("Созвездие снов")
+        }
+
+        composable(Destination.Achievements.route) {
+            Text("Мои достижения")
         }
     }
 }
