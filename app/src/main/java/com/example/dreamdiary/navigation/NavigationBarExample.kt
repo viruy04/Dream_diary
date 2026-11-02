@@ -11,9 +11,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.dreamdiary.ui.theme.ThemeMode
 
 @Composable
-fun NavigationBarExample(navController: NavHostController) {
+fun NavigationBarExample(
+    navController: NavHostController,
+    themeMode: ThemeMode,
+    onThemeChange: (ThemeMode) -> Unit
+) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry?.destination?.route
 
@@ -58,7 +63,9 @@ fun NavigationBarExample(navController: NavHostController) {
     ) { innerPadding ->
         AppNavHost(
             navController = navController,
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier.padding(innerPadding),
+            themeMode = themeMode,
+            onThemeChange = onThemeChange
         )
     }
 }

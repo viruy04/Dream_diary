@@ -9,11 +9,14 @@ import com.example.dreamdiary.screens.HomeScreen
 import com.example.dreamdiary.screens.DreamsScreen
 import com.example.dreamdiary.screens.ProfileScreen
 import androidx.compose.material3.Text
+import com.example.dreamdiary.ui.theme.ThemeMode
 
 @Composable
 fun AppNavHost(
     navController: NavHostController,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    themeMode: ThemeMode,
+    onThemeChange: (ThemeMode) -> Unit
 ) {
     NavHost(
         navController = navController,
@@ -29,7 +32,11 @@ fun AppNavHost(
         }
 
         composable(Destination.Profile.route) {
-            ProfileScreen(navController)
+            ProfileScreen(
+                navController = navController,
+                themeMode = themeMode,
+                onThemeChange = onThemeChange
+            )
         }
 
         composable(Destination.Calendar.route) {
