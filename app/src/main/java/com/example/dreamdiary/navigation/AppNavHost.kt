@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import com.example.dreamdiary.screens.HomeScreen
 import com.example.dreamdiary.screens.DreamsScreen
 import com.example.dreamdiary.screens.ProfileScreen
+import com.example.dreamdiary.screens.CalendarScreen
 import androidx.compose.material3.Text
 import com.example.dreamdiary.ui.theme.ThemeMode
 
@@ -40,7 +41,7 @@ fun AppNavHost(
         }
 
         composable(Destination.Calendar.route) {
-            Text("Календарь сновидений")
+            CalendarScreen()
         }
 
         composable(Destination.Statistics.route) {
