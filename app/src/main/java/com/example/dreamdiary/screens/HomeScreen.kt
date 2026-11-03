@@ -16,7 +16,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -24,6 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -36,6 +39,7 @@ fun HomeScreen(navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
             .padding(20.dp)
     ) {
         Text(
@@ -91,14 +95,15 @@ fun HomeScreen(navController: NavHostController) {
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        Row(
+
+        Column(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             SpaceCard(
                 title = "Календарь",
                 imageRes = R.drawable.calendar_bg,
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.fillMaxWidth(),
                 onClick = {
                     navController.navigate(Destination.Calendar.route)
                 }
@@ -107,23 +112,16 @@ fun HomeScreen(navController: NavHostController) {
             SpaceCard(
                 title = "Статистика",
                 imageRes = R.drawable.statistics_bg,
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.fillMaxWidth(),
                 onClick = {
                     navController.navigate(Destination.Statistics.route)
                 }
             )
-        }
 
-        Spacer(modifier = Modifier.height(12.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
             SpaceCard(
                 title = "Созвездие снов",
                 imageRes = R.drawable.constellation_bg,
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.fillMaxWidth(),
                 onClick = {
                     navController.navigate(Destination.Constellation.route)
                 }
@@ -132,7 +130,7 @@ fun HomeScreen(navController: NavHostController) {
             SpaceCard(
                 title = "Достижения",
                 imageRes = R.drawable.achievements_bg,
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.fillMaxWidth(),
                 onClick = {
                     navController.navigate(Destination.Achievements.route)
                 }
@@ -150,7 +148,8 @@ private fun SpaceCard(
 ) {
     Box(
         modifier = modifier
-            .height(125.dp)
+            .height(140.dp)
+            .clip(RoundedCornerShape(16.dp))
             .clickable(onClick = onClick),
         contentAlignment = Alignment.BottomStart
     ) {
@@ -165,8 +164,10 @@ private fun SpaceCard(
             text = title,
             modifier = Modifier
                 .fillMaxWidth()
-                .background(colorResource(R.color.home_card_overlay))
-                .padding(10.dp),
+                .background(
+                    colorResource(R.color.home_card_overlay)
+                )
+                .padding(12.dp),
             fontSize = 15.sp,
             fontWeight = FontWeight.Medium,
             color = colorResource(R.color.home_card_text)
