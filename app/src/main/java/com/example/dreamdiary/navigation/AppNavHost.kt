@@ -10,7 +10,9 @@ import com.example.dreamdiary.screens.DreamsScreen
 import com.example.dreamdiary.screens.ProfileScreen
 import com.example.dreamdiary.screens.CalendarScreen
 import com.example.dreamdiary.screens.StatisticsScreen
+import com.example.dreamdiary.screens.ConstellationScreen
 import androidx.compose.material3.Text
+import com.example.dreamdiary.screens.AchievementsScreen
 import com.example.dreamdiary.ui.theme.ThemeMode
 
 @Composable
@@ -50,11 +52,10 @@ fun AppNavHost(
         }
 
         composable(Destination.Constellation.route) {
-            Text("Созвездие снов")
+            ConstellationScreen()
         }
-
         composable(Destination.Achievements.route) {
-            Text("Мои достижения")
+            AchievementsScreen()
         }
     }
 }

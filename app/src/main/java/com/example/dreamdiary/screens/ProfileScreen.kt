@@ -1,5 +1,6 @@
 package com.example.dreamdiary.screens
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -34,6 +35,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.dreamdiary.navigation.Destination
 import com.example.dreamdiary.ui.theme.ThemeMode
 
 @Composable
@@ -42,12 +44,24 @@ fun ProfileScreen(
     themeMode: ThemeMode,
     onThemeChange: (ThemeMode) -> Unit
 ) {
-    var showThemeDialog by remember { mutableStateOf(false) }
+    var showThemeDialog by remember {
+        mutableStateOf(false)
+    }
+
+    BackHandler {
+        navController.navigate(Destination.Dreams.route) {
+            popUpTo(Destination.Home.route) {
+                inclusive = false
+            }
+            launchSingleTop = true
+            restoreState = false
+        }
+    }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            //.background(MaterialTheme.colorScheme.background)
             .verticalScroll(rememberScrollState())
             .padding(20.dp)
     ) {
@@ -94,7 +108,9 @@ fun ProfileScreen(
                 Text(
                     text = "Возраст: не указан",
                     fontSize = 14.sp,
-                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
+                    color = MaterialTheme.colorScheme.onBackground.copy(
+                        alpha = 0.7f
+                    )
                 )
             }
         }
@@ -156,7 +172,7 @@ fun ProfileScreen(
         ProfileOption(
             title = "О приложении",
             description = "Дневник сновидений",
-            onClick = { }
+            onClick = {}
         )
     }
 
@@ -291,7 +307,9 @@ private fun ProfileOption(
             Text(
                 text = description,
                 fontSize = 13.sp,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                color = MaterialTheme.colorScheme.onSurface.copy(
+                    alpha = 0.7f
+                )
             )
         }
     }
