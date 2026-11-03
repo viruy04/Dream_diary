@@ -1,6 +1,7 @@
 package com.example.dreamdiary.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,7 +13,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.ChevronRight
@@ -29,9 +33,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.example.dreamdiary.R
 import java.util.Calendar
 
 private data class CalendarDream(
@@ -46,9 +51,7 @@ fun CalendarScreen() {
 
     var displayedMonth by remember {
         mutableStateOf(
-            Calendar.getInstance().apply {
-                set(Calendar.DAY_OF_MONTH, 1)
-            }
+            Calendar.getInstance().apply { set(Calendar.DAY_OF_MONTH, 1) }
         )
     }
 
@@ -71,11 +74,8 @@ fun CalendarScreen() {
         set(Calendar.DAY_OF_MONTH, 1)
     }.get(Calendar.DAY_OF_WEEK)
 
-    // Делаем так, чтобы неделя начиналась с понедельника
     val emptyDays = (firstDay + 5) % 7
-
     val daysInMonth = displayedMonth.getActualMaximum(Calendar.DAY_OF_MONTH)
-
     val days = List(emptyDays) { null } + (1..daysInMonth).map { it }
     val paddedDays = days + List((7 - days.size % 7) % 7) { null }
     val weeks = paddedDays.chunked(7)
@@ -94,135 +94,147 @@ fun CalendarScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            //.background(MaterialTheme.colorScheme.background)
+            .verticalScroll(rememberScrollState())
             .padding(20.dp)
     ) {
         Text(
-            text = "Календарь",
-            fontSize = 25.sp,
-            fontWeight = FontWeight.SemiBold,
+            text = stringResource(R.string.calendar_title),
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onBackground
         )
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // Переключение месяцев
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            IconButton(
-                onClick = {
-                    displayedMonth = (displayedMonth.clone() as Calendar).apply {
-                        add(Calendar.MONTH, -1)
-                    }
-                    selectedDay = 1
-                }
-            ) {
-                Icon(
-                    imageVector = Icons.Default.ChevronLeft,
-                    contentDescription = "Предыдущий месяц"
-                )
-            }
-
-            Text(
-                text = "${monthNames[month]} $year",
-                fontSize = 19.sp,
-                fontWeight = FontWeight.Medium,
-                color = MaterialTheme.colorScheme.onBackground
+        // Карточка календаря
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .border(
+                    width = 1.dp,
+                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
+                    shape = RoundedCornerShape(20.dp)
+                ),
+            shape = RoundedCornerShape(20.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.85f)
             )
-
-            IconButton(
-                onClick = {
-                    displayedMonth = (displayedMonth.clone() as Calendar).apply {
-                        add(Calendar.MONTH, 1)
-                    }
-                    selectedDay = 1
-                }
-            ) {
-                Icon(
-                    imageVector = Icons.Default.ChevronRight,
-                    contentDescription = "Следующий месяц"
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        // Дни недели
-        Row(modifier = Modifier.fillMaxWidth()) {
-            listOf("Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс").forEach { day ->
-                Box(
-                    modifier = Modifier.weight(1f),
-                    contentAlignment = Alignment.Center
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                // Переключение месяцев
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(
-                        text = day,
-                        fontSize = 13.sp,
-                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
-                    )
-                }
-            }
-        }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        // Дни месяца
-        weeks.forEach { week ->
-            Row(modifier = Modifier.fillMaxWidth()) {
-                week.forEach { day ->
-                    Box(
-                        modifier = Modifier
-                            .weight(1f)
-                            .height(46.dp)
-                            .clickable(enabled = day != null) {
-                                selectedDay = day!!
-                            },
-                        contentAlignment = Alignment.Center
+                    IconButton(
+                        onClick = {
+                            displayedMonth = (displayedMonth.clone() as Calendar).apply {
+                                add(Calendar.MONTH, -1)
+                            }
+                            selectedDay = 1
+                        }
                     ) {
-                        if (day != null) {
-                            val isSelected = day == selectedDay
-                            val hasDream = demoDreams.any { it.day == day }
+                        Icon(
+                            imageVector = Icons.Default.ChevronLeft,
+                            contentDescription = stringResource(R.string.prev_month_desc),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
 
-                            Column(
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.Center
+                    Text(
+                        text = "${monthNames[month]} $year",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+
+                    IconButton(
+                        onClick = {
+                            displayedMonth = (displayedMonth.clone() as Calendar).apply {
+                                add(Calendar.MONTH, 1)
+                            }
+                            selectedDay = 1
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.ChevronRight,
+                            contentDescription = stringResource(R.string.next_month_desc),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                // Дни недели
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    listOf("Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс").forEach { day ->
+                        Box(
+                            modifier = Modifier.weight(1f),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = day,
+                                style = MaterialTheme.typography.labelMedium,
+                                fontWeight = FontWeight.SemiBold,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // Дни месяца
+                weeks.forEach { week ->
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        week.forEach { day ->
+                            Box(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .height(46.dp)
+                                    .clickable(enabled = day != null) { selectedDay = day!! },
+                                contentAlignment = Alignment.Center
                             ) {
-                                Box(
-                                    modifier = Modifier
-                                        .size(32.dp)
-                                        .background(
-                                            color = if (isSelected) {
-                                                MaterialTheme.colorScheme.primary
-                                            } else {
-                                                MaterialTheme.colorScheme.background
-                                            },
-                                            shape = CircleShape
-                                        ),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Text(
-                                        text = day.toString(),
-                                        color = if (isSelected) {
-                                            MaterialTheme.colorScheme.onPrimary
-                                        } else {
-                                            MaterialTheme.colorScheme.onBackground
-                                        },
-                                        fontSize = 14.sp
-                                    )
-                                }
+                                if (day != null) {
+                                    val isSelected = day == selectedDay
+                                    val hasDream = demoDreams.any { it.day == day }
 
-                                if (hasDream) {
-                                    Box(
-                                        modifier = Modifier
-                                            .padding(top = 2.dp)
-                                            .size(4.dp)
-                                            .background(
-                                                MaterialTheme.colorScheme.primary,
-                                                CircleShape
+                                    Column(
+                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                        verticalArrangement = Arrangement.Center
+                                    ) {
+                                        Box(
+                                            modifier = Modifier
+                                                .size(32.dp)
+                                                .background(
+                                                    color = if (isSelected) MaterialTheme.colorScheme.primary
+                                                    else MaterialTheme.colorScheme.surface.copy(alpha = 0.2f),
+                                                    shape = CircleShape
+                                                ),
+                                            contentAlignment = Alignment.Center
+                                        ) {
+                                            Text(
+                                                text = day.toString(),
+                                                color = if (isSelected) MaterialTheme.colorScheme.onPrimary
+                                                else MaterialTheme.colorScheme.onSurface,
+                                                style = MaterialTheme.typography.bodyMedium
                                             )
-                                    )
+                                        }
+
+                                        if (hasDream) {
+                                            Box(
+                                                modifier = Modifier
+                                                    .padding(top = 2.dp)
+                                                    .size(4.dp)
+                                                    .background(
+                                                        MaterialTheme.colorScheme.primary,
+                                                        CircleShape
+                                                    )
+                                            )
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -233,10 +245,11 @@ fun CalendarScreen() {
 
         Spacer(modifier = Modifier.height(24.dp))
 
+        // Заголовок выбранной даты
         Text(
             text = "$selectedDay ${monthNames[month].lowercase()}",
-            fontSize = 19.sp,
-            fontWeight = FontWeight.Medium,
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onBackground
         )
 
@@ -244,8 +257,8 @@ fun CalendarScreen() {
 
         if (selectedDreams.isEmpty()) {
             Text(
-                text = "На эту дату пока нет записей",
-                fontSize = 14.sp,
+                text = stringResource(R.string.no_entries_for_date),
+                style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
             )
         } else {
@@ -253,16 +266,22 @@ fun CalendarScreen() {
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 10.dp),
+                        .padding(bottom = 10.dp)
+                        .border(
+                            width = 1.dp,
+                            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
+                            shape = RoundedCornerShape(16.dp)
+                        ),
+                    shape = RoundedCornerShape(16.dp),
                     colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surface
+                        containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.85f)
                     )
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text(
                             text = dream.title,
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Medium,
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface
                         )
 
@@ -270,8 +289,8 @@ fun CalendarScreen() {
 
                         Text(
                             text = dream.time,
-                            fontSize = 13.sp,
-                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.primary
                         )
                     }
                 }

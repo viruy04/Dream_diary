@@ -47,10 +47,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.dreamdiary.R
 import com.example.dreamdiary.navigation.Destination
 import com.example.dreamdiary.ui.theme.ThemeMode
 
@@ -78,9 +80,8 @@ fun ProfileScreen(
             .verticalScroll(rememberScrollState())
             .padding(20.dp)
     ) {
-        // Заголовок экрана
         Text(
-            text = "Профиль",
+            text = stringResource(R.string.profile_title),
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onBackground
@@ -88,7 +89,7 @@ fun ProfileScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Блок профиля (Аватарка + Имя)
+        // Имя и Возраст из ресурсов
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -108,7 +109,6 @@ fun ProfileScreen(
                     .padding(18.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Аватарка с бейджем камеры
                 Box(contentAlignment = Alignment.BottomEnd) {
                     Box(
                         modifier = Modifier
@@ -130,7 +130,6 @@ fun ProfileScreen(
                         )
                     }
 
-                    // Бейдж загрузки фото
                     Box(
                         modifier = Modifier
                             .size(24.dp)
@@ -152,7 +151,7 @@ fun ProfileScreen(
 
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "Анна",
+                        text = stringResource(R.string.user_name_default),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
@@ -161,7 +160,7 @@ fun ProfileScreen(
                     Spacer(modifier = Modifier.height(2.dp))
 
                     Text(
-                        text = "Возраст: не указан",
+                        text = stringResource(R.string.user_age_default),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                     )
@@ -179,9 +178,9 @@ fun ProfileScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Блок статистики активности
+        // Моя активность
         Text(
-            text = "Моя активность",
+            text = stringResource(R.string.my_activity),
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onBackground
@@ -210,17 +209,17 @@ fun ProfileScreen(
             ) {
                 ProfileStatisticItem(
                     value = "12",
-                    label = "Сновидений",
+                    label = stringResource(R.string.stat_dreams),
                     icon = Icons.Default.NightlightRound
                 )
                 ProfileStatisticItem(
                     value = "5",
-                    label = "Созвездий",
+                    label = stringResource(R.string.stat_constellations),
                     icon = Icons.Default.AutoAwesome
                 )
                 ProfileStatisticItem(
                     value = "3",
-                    label = "Достижения",
+                    label = stringResource(R.string.stat_achievements),
                     icon = Icons.Default.EmojiEvents
                 )
             }
@@ -230,7 +229,7 @@ fun ProfileScreen(
 
         // Настройки
         Text(
-            text = "Настройки",
+            text = stringResource(R.string.settings_title),
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onBackground
@@ -240,33 +239,31 @@ fun ProfileScreen(
 
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
             ProfileOptionCard(
-                title = "Тема оформления",
+                title = stringResource(R.string.theme_setting_title),
                 description = when (themeMode) {
-                    ThemeMode.SYSTEM -> "Как на устройстве"
-                    ThemeMode.LIGHT -> "Светлая"
-                    ThemeMode.DARK -> "Тёмная"
+                    ThemeMode.SYSTEM -> stringResource(R.string.theme_system)
+                    ThemeMode.LIGHT -> stringResource(R.string.theme_light)
+                    ThemeMode.DARK -> stringResource(R.string.theme_dark)
                 },
                 icon = Icons.Default.Palette,
                 onClick = { showThemeDialog = true }
             )
 
             ProfileOptionCard(
-                title = "О приложении",
-                description = "Dream Diary v1.0 • Уютный дневник снов",
+                title = stringResource(R.string.about_app_title),
+                description = stringResource(R.string.about_app_description),
                 icon = Icons.Default.Info,
                 onClick = { }
             )
         }
     }
 
-    // Диалог выбора темы
-    // Диалог выбора темы
     if (showThemeDialog) {
         AlertDialog(
             onDismissRequest = { showThemeDialog = false },
             title = {
                 Text(
-                    text = "Тема оформления",
+                    text = stringResource(R.string.theme_setting_title),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold
                 )
@@ -274,36 +271,36 @@ fun ProfileScreen(
             text = {
                 Column {
                     ThemeModeOption(
-                        title = "Как на устройстве",
+                        title = stringResource(R.string.theme_system),
                         selected = themeMode == ThemeMode.SYSTEM,
                         onClick = {
-                            showThemeDialog = false // 1. Сначала закрываем диалог
-                            onThemeChange(ThemeMode.SYSTEM) // 2. Затем меняем тему
+                            showThemeDialog = false
+                            onThemeChange(ThemeMode.SYSTEM)
                         }
                     )
 
                     ThemeModeOption(
-                        title = "Светлая тема",
+                        title = stringResource(R.string.theme_light),
                         selected = themeMode == ThemeMode.LIGHT,
                         onClick = {
-                            showThemeDialog = false // 1. Сначала закрываем диалог
-                            onThemeChange(ThemeMode.LIGHT) // 2. Затем меняем тему
+                            showThemeDialog = false
+                            onThemeChange(ThemeMode.LIGHT)
                         }
                     )
 
                     ThemeModeOption(
-                        title = "Тёмная тема",
+                        title = stringResource(R.string.theme_dark),
                         selected = themeMode == ThemeMode.DARK,
                         onClick = {
-                            showThemeDialog = false // 1. Сначала закрываем диалог
-                            onThemeChange(ThemeMode.DARK) // 2. Затем меняем тему
+                            showThemeDialog = false
+                            onThemeChange(ThemeMode.DARK)
                         }
                     )
                 }
             },
             confirmButton = {
                 TextButton(onClick = { showThemeDialog = false }) {
-                    Text("Закрыть")
+                    Text(stringResource(R.string.button_close))
                 }
             }
         )

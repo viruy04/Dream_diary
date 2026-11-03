@@ -36,50 +36,53 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.dreamdiary.R
 
-// Модель данных для UI
 private data class Dream(
     val title: String,
     val date: String,
     val description: String,
-    val mood: String,
+    val moodResId: Int,
     val moodEmoji: String,
-    val tags: List<String>
+    val tagsResIds: List<Int>
 )
 
-// Примерные данные для отображения в макете
-private val exampleDreams = listOf(
+@Composable
+private fun getExampleDreams() = listOf(
     Dream(
         title = "Прогулка у моря",
         date = "2 ноября 2026, 08:30",
-        description = "Мне приснилось, что я гуляю по берегу моря. Вода была очень спокойной, шёл тёплый синий дождь, и в небе плавали светящиеся киты...",
-        mood = "Спокойствие",
+        description = "Мне приснилось, что я гуляю по берегу моря. Вода была очень спокойной, шёл тёплый синий дождь...",
+        moodResId = R.string.mood_calm,
         moodEmoji = "🌊",
-        tags = listOf("Море", "Природа", "Киты")
+        tagsResIds = listOf(R.string.tag_sea, R.string.tag_nature)
     ),
     Dream(
         title = "Необычный город",
         date = "1 ноября 2026, 09:15",
-        description = "Я оказалась в незнакомом городе, где все дома были необычных цветов, а улочки закручивались в спирали созвездий...",
-        mood = "Удивление",
+        description = "Я оказалась в незнакомом городе, где все дома были необычных цветов, а улочки закручивались в спирали...",
+        moodResId = R.string.mood_surprise,
         moodEmoji = "😮",
-        tags = listOf("Город", "Путешествие", "Звёзды")
+        tagsResIds = listOf(R.string.tag_city, R.string.tag_travel, R.string.tag_stars)
     ),
     Dream(
-        title = "Полёт над облаками",
+        title = "Встреча с друзьями",
         date = "30 октября 2026, 07:45",
-        description = "Я просто оттолкнулась от земли и полетела наперегонки с ночным ветром над фиолетовыми облаками...",
-        mood = "Вдохновение",
-        moodEmoji = "💫",
-        tags = listOf("Полёт", "Свобода", "Облака")
+        description = "Мы созвонились и отправились в долгое путешествие за город...",
+        moodResId = R.string.mood_joy,
+        moodEmoji = "😊",
+        tagsResIds = listOf(R.string.tag_friends, R.string.tag_travel)
     )
 )
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun DreamsScreen() {
+    val exampleDreams = getExampleDreams()
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -90,9 +93,8 @@ fun DreamsScreen() {
             Column {
                 Spacer(modifier = Modifier.height(20.dp))
 
-                // Заголовок и подзаголовок
                 Text(
-                    text = "Мои сновидения",
+                    text = stringResource(R.string.dreams_title),
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground
@@ -101,20 +103,19 @@ fun DreamsScreen() {
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = "Здесь хранятся истории твоих снов",
+                    text = stringResource(R.string.dreams_subtitle),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Кнопка «Добавить новый сон»
                 Button(
                     onClick = { },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.onSecondary,
+                        containerColor = MaterialTheme.colorScheme.primary,
                         contentColor = MaterialTheme.colorScheme.onPrimary
                     )
                 ) {
@@ -128,7 +129,7 @@ fun DreamsScreen() {
                             contentDescription = null
                         )
                         Text(
-                            text = "Добавить новый сон",
+                            text = stringResource(R.string.button_add_dream),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold
                         )
@@ -137,12 +138,11 @@ fun DreamsScreen() {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Поле поиска (макет UI)
                 OutlinedTextField(
                     value = "",
                     onValueChange = { },
                     modifier = Modifier.fillMaxWidth(),
-                    placeholder = { Text("Поиск по названию или тегам...") },
+                    placeholder = { Text(stringResource(R.string.search_placeholder)) },
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.Search,
@@ -162,7 +162,7 @@ fun DreamsScreen() {
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                // Чипы фильтров настроения (макет UI)
+                // Чипы настроений из ресурсов
                 FlowRow(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -170,7 +170,7 @@ fun DreamsScreen() {
                     FilterChip(
                         selected = true,
                         onClick = { },
-                        label = { Text("Все") },
+                        label = { Text(stringResource(R.string.mood_all)) },
                         shape = RoundedCornerShape(12.dp),
                         colors = FilterChipDefaults.filterChipColors(
                             selectedContainerColor = MaterialTheme.colorScheme.primary,
@@ -181,21 +181,21 @@ fun DreamsScreen() {
                     FilterChip(
                         selected = false,
                         onClick = { },
-                        label = { Text("Спокойствие") },
+                        label = { Text("${stringResource(R.string.mood_calm)}") },
                         shape = RoundedCornerShape(12.dp)
                     )
 
                     FilterChip(
                         selected = false,
                         onClick = { },
-                        label = { Text("Удивление") },
+                        label = { Text("${stringResource(R.string.mood_surprise)}") },
                         shape = RoundedCornerShape(12.dp)
                     )
 
                     FilterChip(
                         selected = false,
                         onClick = { },
-                        label = { Text("Вдохновение") },
+                        label = { Text("${stringResource(R.string.mood_joy)}") },
                         shape = RoundedCornerShape(12.dp)
                     )
                 }
@@ -203,7 +203,7 @@ fun DreamsScreen() {
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Text(
-                    text = "Последние записи",
+                    text = stringResource(R.string.recent_entries),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground
@@ -211,7 +211,6 @@ fun DreamsScreen() {
             }
         }
 
-        // Отображение списка элементов UI
         items(exampleDreams) { dream ->
             DreamCard(dream)
         }
@@ -242,7 +241,6 @@ private fun DreamCard(dream: Dream) {
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
-            // Верхняя строка: Дата и действия
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -284,7 +282,6 @@ private fun DreamCard(dream: Dream) {
 
             Spacer(modifier = Modifier.height(6.dp))
 
-            // Название сна
             Text(
                 text = dream.title,
                 style = MaterialTheme.typography.titleLarge,
@@ -294,7 +291,6 @@ private fun DreamCard(dream: Dream) {
 
             Spacer(modifier = Modifier.height(6.dp))
 
-            // Описание сна
             Text(
                 text = dream.description,
                 style = MaterialTheme.typography.bodyMedium,
@@ -304,7 +300,6 @@ private fun DreamCard(dream: Dream) {
 
             Spacer(modifier = Modifier.height(14.dp))
 
-            // Чип настроения и плашки тегов
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -315,7 +310,7 @@ private fun DreamCard(dream: Dream) {
                     color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f)
                 ) {
                     Text(
-                        text = "${dream.moodEmoji} ${dream.mood}",
+                        text = "${dream.moodEmoji} ${stringResource(dream.moodResId)}",
                         modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
                         style = MaterialTheme.typography.labelSmall,
                         fontWeight = FontWeight.SemiBold,
@@ -326,13 +321,13 @@ private fun DreamCard(dream: Dream) {
                 FlowRow(
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    dream.tags.forEach { tag ->
+                    dream.tagsResIds.forEach { tagResId ->
                         Surface(
                             shape = RoundedCornerShape(8.dp),
                             color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.2f)
                         ) {
                             Text(
-                                text = "#$tag",
+                                text = "#${stringResource(tagResId)}",
                                 modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
                                 style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)

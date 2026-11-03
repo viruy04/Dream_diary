@@ -20,19 +20,14 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.FormatQuote
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.outlined.AutoAwesome
 import androidx.compose.material.icons.outlined.BarChart
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.EmojiEvents
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -44,6 +39,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -60,9 +56,9 @@ fun HomeScreen(navController: NavHostController) {
             .verticalScroll(rememberScrollState())
             .padding(20.dp)
     ) {
-        // 1. Заголовок приложения
+        // Заголовок из ресурсов
         Text(
-            text = "Дневник сновидений",
+            text = stringResource(R.string.home_title),
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onBackground
@@ -70,7 +66,7 @@ fun HomeScreen(navController: NavHostController) {
 
         Spacer(modifier = Modifier.height(4.dp))
 
-        // 2. Динамическое приветствие (зависит от времени суток)
+        // Динамическое приветствие
         Text(
             text = getGreetingText(),
             style = MaterialTheme.typography.bodyLarge,
@@ -79,7 +75,7 @@ fun HomeScreen(navController: NavHostController) {
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // 4. Карточка «Цитата дня» (подготовлена под будущую загрузку из API)
+        // Цитата дня
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -94,25 +90,19 @@ fun HomeScreen(navController: NavHostController) {
             )
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            imageVector = Icons.Default.FormatQuote,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text(
-                            text = "Цитата дня",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Default.FormatQuote,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Text(
+                        text = stringResource(R.string.quote_of_the_day),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -123,16 +113,14 @@ fun HomeScreen(navController: NavHostController) {
                     fontStyle = FontStyle.Italic,
                     color = MaterialTheme.colorScheme.onSurface
                 )
-
-                Spacer(modifier = Modifier.height(4.dp))
             }
         }
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // 5. Раздел «Моё пространство»
+        // Раздел «Моё пространство»
         Text(
-            text = "Моё пространство",
+            text = stringResource(R.string.my_space),
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onBackground
@@ -140,21 +128,21 @@ fun HomeScreen(navController: NavHostController) {
 
         Spacer(modifier = Modifier.height(14.dp))
 
-        // 6. Сетка 2x2 для карточек разделов
+        // Сетка карточек 2x2
         Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(14.dp)
             ) {
                 SpaceCard(
-                    title = "Календарь",
+                    title = stringResource(R.string.calendar_title),
                     icon = Icons.Outlined.CalendarMonth,
                     imageRes = R.drawable.calendar_bg,
                     modifier = Modifier.weight(1f),
                     onClick = { navController.navigate(Destination.Calendar.route) }
                 )
                 SpaceCard(
-                    title = "Статистика",
+                    title = stringResource(R.string.statistics_title),
                     icon = Icons.Outlined.BarChart,
                     imageRes = R.drawable.statistics_bg,
                     modifier = Modifier.weight(1f),
@@ -167,14 +155,14 @@ fun HomeScreen(navController: NavHostController) {
                 horizontalArrangement = Arrangement.spacedBy(14.dp)
             ) {
                 SpaceCard(
-                    title = "Созвездие снов",
+                    title = stringResource(R.string.constellation_title),
                     icon = Icons.Outlined.AutoAwesome,
                     imageRes = R.drawable.constellation_bg,
                     modifier = Modifier.weight(1f),
                     onClick = { navController.navigate(Destination.Constellation.route) }
                 )
                 SpaceCard(
-                    title = "Достижения",
+                    title = stringResource(R.string.achievements_title),
                     icon = Icons.Outlined.EmojiEvents,
                     imageRes = R.drawable.achievements_bg,
                     modifier = Modifier.weight(1f),
@@ -185,9 +173,6 @@ fun HomeScreen(navController: NavHostController) {
     }
 }
 
-/**
- * Компонент карточки раздела в сетке «Моё пространство»
- */
 @Composable
 private fun SpaceCard(
     title: String,
@@ -203,7 +188,6 @@ private fun SpaceCard(
             .clickable(onClick = onClick),
         contentAlignment = Alignment.BottomStart
     ) {
-        // Фоновое изображение карточки
         Image(
             painter = painterResource(id = imageRes),
             contentDescription = title,
@@ -211,7 +195,6 @@ private fun SpaceCard(
             contentScale = ContentScale.Crop
         )
 
-        // Плавный оверлей-градиент для читаемости текста
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -226,7 +209,6 @@ private fun SpaceCard(
                 )
         )
 
-        // Иконка-значок в верхнем правом углу
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -248,7 +230,6 @@ private fun SpaceCard(
             }
         }
 
-        // Название карточки
         Text(
             text = title,
             modifier = Modifier.padding(14.dp),
@@ -259,9 +240,6 @@ private fun SpaceCard(
     }
 }
 
-/**
- * Вспомогательная функция для динамического приветствия по часам устройства
- */
 private fun getGreetingText(): String {
     val hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
     return when (hour) {
