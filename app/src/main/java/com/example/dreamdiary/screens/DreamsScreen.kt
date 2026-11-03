@@ -89,7 +89,7 @@ fun DreamsScreen() {
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(10.dp),
                     colors = ButtonDefaults.buttonColors(
-                        disabledContainerColor = MaterialTheme.colorScheme.primary,
+                        disabledContainerColor =MaterialTheme.colorScheme.onSecondary,
                         disabledContentColor = MaterialTheme.colorScheme.onPrimary
                     )
                 ) {
@@ -124,7 +124,7 @@ private fun DreamCard(dream: Dream) {
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
+            containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.85f)
         ),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 1.dp

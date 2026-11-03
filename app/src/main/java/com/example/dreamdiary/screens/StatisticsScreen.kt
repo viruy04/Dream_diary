@@ -40,7 +40,7 @@ fun StatisticsScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            //.background(MaterialTheme.colorScheme.background)
             .padding(20.dp)
     ) {
         Text(

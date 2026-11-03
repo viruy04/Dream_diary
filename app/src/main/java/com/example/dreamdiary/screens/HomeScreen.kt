@@ -1,6 +1,7 @@
 package com.example.dreamdiary.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import com.example.dreamdiary.R
@@ -35,7 +36,6 @@ fun HomeScreen(navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
             .padding(20.dp)
     ) {
         Text(
@@ -165,11 +165,11 @@ private fun SpaceCard(
             text = title,
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color(0x99000000))
+                .background(colorResource(R.color.home_card_overlay))
                 .padding(10.dp),
             fontSize = 15.sp,
             fontWeight = FontWeight.Medium,
-            color = Color.White
+            color = colorResource(R.color.home_card_text)
         )
     }
 }
