@@ -1,3 +1,148 @@
 <resources>
     <string name="app_name">Dream diary</string>
+    <string name="achievements_progress">Открыто: %1$d из %2$d</string>
+
+    <string name="achievement_locked_title">Скрытое достижение</string>
+    <string name="achievement_locked_description">Это достижение пока закрыто. Выполни условие, чтобы открыть его название и описание.</string>
+    <string name="achievement_locked_status">Не открыто</string>
+    <string name="achievement_unlocked_status">Открыто</string>
+    <string name="achievement_condition">Условие: %1$s</string>
+    <string name="achievement_received_date">Получено: %1$s</string>
+    <string name="button_close">Закрыть</string>
+
+    <string name="achievement_first_sparkle">Первое сияние</string>
+    <string name="achievement_first_sparkle_description">Твоя история сновидений начинается с первой записи.</string>
+    <string name="achievement_first_sparkle_condition">Сохранить первый сон.</string>
+
+    <string name="achievement_moon_archive">Лунный архив</string>
+    <string name="achievement_moon_archive_description">Ты собрала небольшую коллекцию ночных историй.</string>
+    <string name="achievement_moon_archive_condition">Сохранить 5 снов.</string>
+
+    <string name="achievement_galaxy">Галактика воспоминаний</string>
+    <string name="achievement_galaxy_description">Твой дневник постепенно превращается в целую галактику.</string>
+    <string name="achievement_galaxy_condition">Сохранить 10 снов.</string>
+
+    <string name="achievement_constellation">Создатель созвездий</string>
+    <string name="achievement_constellation_description">Некоторые сны связывает общая тема.</string>
+    <string name="achievement_constellation_condition">Добавить один тег к 3 снам.</string>
+
+    <string name="achievement_shooting_star">Падающая звезда</string>
+    <string name="achievement_shooting_star_description">Три дня подряд ты сохраняешь свои сновидения.</string>
+    <string name="achievement_shooting_star_condition">Записать сон в каждый из 3 последовательных календарных дней.</string>
+
+    <string name="achievement_world_explorer">Исследователь миров</string>
+    <string name="achievement_world_explorer_description">Ты находишь всё больше деталей в своих снах.</string>
+    <string name="achievement_world_explorer_condition">Добавить теги к 5 снам.</string>
+
+    <string name="achievement_nebula">Туманность чувств</string>
+    <string name="achievement_nebula_description">Ты замечаешь настроение, которое оставляют после себя сны.</string>
+    <string name="achievement_nebula_condition">Оценить настроение в 10 снах.</string>
+
+    <string name="achievement_universe_guardian">Хранитель вселенной</string>
+    <string name="achievement_universe_guardian_description">Твой архив сновидений становится всё больше.</string>
+    <string name="achievement_universe_guardian_condition">Сохранить 25 снов.</string>
+
+    <string name="achievement_date_demo_1">01.11.2026</string>
+    <string name="achievement_date_demo_2">02.11.2026</string>
+    <string name="achievement_date_demo_3">03.11.2026</string>
+
+    <!-- Названия экранов и навигация -->
+    <string name="home_title">Дневник сновидений</string>
+    <string name="dreams_title">Мои сновидения</string>
+    <string name="profile_title">Профиль</string>
+    <string name="calendar_title">Календарь</string>
+    <string name="statistics_title">Статистика</string>
+    <string name="constellation_title">Созвездие снов</string>
+    <string name="achievements_title">Достижения</string>
+
+    <!-- Главный экран (HomeScreen) -->
+    <string name="greeting_default">Привет! Как прошла ночь? ✨</string>
+    <string name="button_new_dream">Записать новый сон</string>
+    <string name="quote_of_the_day">Цитата дня</string>
+    <string name="my_space">Моё пространство</string>
+
+    <!-- Экран сновидений (DreamsScreen) -->
+    <string name="dreams_subtitle">Здесь хранятся истории твоих снов</string>
+    <string name="button_add_dream">Добавить новый сон</string>
+    <string name="search_placeholder">Поиск по названию или тегам...</string>
+    <string name="recent_entries">Последние записи</string>
+
+    <!-- Настроения (Moods) -->
+    <string name="mood_all">Все</string>
+    <string name="mood_calm">Спокойствие</string>
+    <string name="mood_surprise">Удивление</string>
+    <string name="mood_inspiration">Вдохновение</string>
+    <string name="mood_angry">Злость</string>
+    <string name="mood_love">Любовь</string>
+    <string name="mood_joy">Радость</string>
+    <string name="mood_scary">Страх</string>
+    <string name="mood_sadness">Грусть</string>
+
+    <!-- Теги (Tags) -->
+    <string name="tag_sea">Вода</string>
+    <string name="tag_nature">Природа</string>
+    <string name="tag_whales">Деревня</string>
+    <string name="tag_work">Работа</string>
+    <string name="tag_city">Город</string>
+    <string name="tag_travel">Путешествие</string>
+    <string name="tag_stars">Звёзды</string>
+    <string name="tag_flight">Полёт</string>
+    <string name="tag_freedom">Свобода</string>
+    <string name="tag_clouds">Облака</string>
+    <string name="tag_forest">Лес</string>
+    <string name="tag_studying">Учёба</string>
+    <string name="tag_friends">Друзья</string>
+    <string name="tag_love">Любовь</string>
+    <string name="tag_family">Семья</string>
+    <string name="tag_fire">Огонь</string>
+    <string name="tag_wind">Ветер</string>
+    <string name="tag_scary">Кошмар</string>
+    <string name="tag_alone">Одиночество</string>
+    <string name="tag_holiday">Праздник</string>
+    <string name="tag_animals">Животные</string>
+    <string name="tag_war">Война</string>
+    <string name="tag_eat">Еда</string>
+    <string name="tag_plants">Растения</string>
+
+    <!-- Профиль (ProfileScreen) -->
+    <string name="user_name_default">Имя пользователя</string>
+    <string name="user_age_default">Возраст: не указан</string>
+    <string name="my_activity">Моя активность</string>
+    <string name="stat_dreams">Сновидений</string>
+    <string name="stat_constellations">Созвездий</string>
+    <string name="stat_achievements">Достижения</string>
+
+    <!-- Настройки темы и приложения -->
+    <string name="settings_title">Настройки</string>
+    <string name="theme_setting_title">Тема оформления</string>
+    <string name="theme_system">Как на устройстве</string>
+    <string name="theme_light">Светлая тема</string>
+    <string name="theme_dark">Тёмная тема</string>
+    <string name="about_app_title">О приложении</string>
+    <string name="about_app_description">Dream Diary v1.0 • Уютный дневник снов</string>
+
+    <!-- Экран «Календарь» (CalendarScreen) -->
+    <string name="no_entries_for_date">На эту дату пока нет записей</string>
+    <string name="prev_month_desc">Предыдущий месяц</string>
+    <string name="next_month_desc">Следующий месяц</string>
+
+    <!-- Экран «Статистика» (StatisticsScreen) -->
+    <string name="stat_total_dreams">Всего снов</string>
+    <string name="stat_for_week">За неделю</string>
+    <string name="stat_mood_title">Настроение во снах</string>
+    <string name="stat_summary_days">За последние 7 дней записано 4 сна</string>
+    <string name="stat_frequent_mood">Самое частое настроение — радостное</string>
+
+    <!-- Экран «Созвездие снов» (ConstellationScreen) -->
+    <string name="constellation_subtitle">Найди связь между своими снами</string>
+    <string name="constellation_hint">Нажми на звезду, чтобы узнать больше о сне</string>
+    <string name="constellation_info_title">Как работает созвездие?</string>
+    <string name="constellation_info_text1">Каждая звезда — это отдельное сновидение.</string>
+    <string name="constellation_info_text2">Если у двух снов совпадает хотя бы один тег, они соединяются линией и образуют созвездие.</string>
+    <string name="constellation_info_text3">Нажми на звезду, чтобы посмотреть теги сна и найти связанные с ним сновидения.</string>
+    <string name="button_got_it">Понятно</string>
+    <string name="tags_label">Теги</string>
+    <string name="connected_dreams_label">Связанные сны</string>
+    <string name="no_connected_dreams">Пока нет совпадений с другими снами.</string>
+    <string name="common_tags_prefix">Общие теги: %1$s</string>
 </resources>
