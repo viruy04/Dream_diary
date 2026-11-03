@@ -1,3 +1,49 @@
 <resources>
     <string name="app_name">Dream diary</string>
+    <string name="achievements_title">Достижения</string>
+    <string name="achievements_progress">Открыто: %1$d из %2$d</string>
+
+    <string name="achievement_locked_title">Скрытое достижение</string>
+    <string name="achievement_locked_description">Это достижение пока закрыто. Выполни условие, чтобы открыть его название и описание.</string>
+    <string name="achievement_locked_status">Не открыто</string>
+    <string name="achievement_unlocked_status">Открыто</string>
+    <string name="achievement_condition">Условие: %1$s</string>
+    <string name="achievement_received_date">Получено: %1$s</string>
+    <string name="button_close">Закрыть</string>
+
+    <string name="achievement_first_sparkle">Первое сияние</string>
+    <string name="achievement_first_sparkle_description">Твоя история сновидений начинается с первой записи.</string>
+    <string name="achievement_first_sparkle_condition">Сохранить первый сон.</string>
+
+    <string name="achievement_moon_archive">Лунный архив</string>
+    <string name="achievement_moon_archive_description">Ты собрала небольшую коллекцию ночных историй.</string>
+    <string name="achievement_moon_archive_condition">Сохранить 5 снов.</string>
+
+    <string name="achievement_galaxy">Галактика воспоминаний</string>
+    <string name="achievement_galaxy_description">Твой дневник постепенно превращается в целую галактику.</string>
+    <string name="achievement_galaxy_condition">Сохранить 10 снов.</string>
+
+    <string name="achievement_constellation">Создатель созвездий</string>
+    <string name="achievement_constellation_description">Некоторые сны связывает общая тема.</string>
+    <string name="achievement_constellation_condition">Добавить один тег к 3 снам.</string>
+
+    <string name="achievement_shooting_star">Падающая звезда</string>
+    <string name="achievement_shooting_star_description">Три дня подряд ты сохраняешь свои сновидения.</string>
+    <string name="achievement_shooting_star_condition">Записать сон в каждый из 3 последовательных календарных дней.</string>
+
+    <string name="achievement_world_explorer">Исследователь миров</string>
+    <string name="achievement_world_explorer_description">Ты находишь всё больше деталей в своих снах.</string>
+    <string name="achievement_world_explorer_condition">Добавить теги к 5 снам.</string>
+
+    <string name="achievement_nebula">Туманность чувств</string>
+    <string name="achievement_nebula_description">Ты замечаешь настроение, которое оставляют после себя сны.</string>
+    <string name="achievement_nebula_condition">Оценить настроение в 10 снах.</string>
+
+    <string name="achievement_universe_guardian">Хранитель вселенной</string>
+    <string name="achievement_universe_guardian_description">Твой архив сновидений становится всё больше.</string>
+    <string name="achievement_universe_guardian_condition">Сохранить 25 снов.</string>
+
+    <string name="achievement_date_demo_1">01.11.2026</string>
+    <string name="achievement_date_demo_2">02.11.2026</string>
+    <string name="achievement_date_demo_3">03.11.2026</string>
 </resources>
