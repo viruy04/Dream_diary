@@ -1,5 +1,6 @@
 package com.example.dreamdiary.screens
 
+import android.content.Context
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -34,9 +35,11 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -50,39 +53,61 @@ private data class Dream(
     val date: String,
     val description: String,
     val moodResId: Int,
-    val tagsResIds: List<Int>
+    val tags: List<String>
 )
 
+/**
+ * Чтение списка тегов из файла res/raw/tags.txt с помощью BufferedReader
+ */
+fun loadTagsFromRaw(context: Context): List<String> {
+    return try {
+        context.resources.openRawResource(R.raw.tags)
+            .bufferedReader() // <--- Используем BufferedReader для чтения текстового файла
+            .use { reader ->
+                reader.readLines()
+                    .map { it.trim() }
+                    .filter { it.isNotEmpty() }
+            }
+    } catch (e: Exception) {
+        // Если файл ещё не создан, возвращаем базовые теги
+        listOf("Вода", "Природа", "Город", "Путешествие")
+    }
+}
+
 @Composable
-private fun getExampleDreams() = listOf(
+private fun getExampleDreams(allTags: List<String>) = listOf(
     Dream(
         title = "Прогулка у моря",
         date = "2 ноября 2026, 08:30",
         description = "Мне приснилось, что я гуляю по берегу моря. Вода была очень спокойной, шёл тёплый синий дождь...",
         moodResId = R.string.mood_calm,
-        tagsResIds = listOf(R.string.tag_sea, R.string.tag_nature)
+        tags = allTags.take(2) // Берём первые теги из tags.txt
     ),
     Dream(
         title = "Необычный город",
         date = "1 ноября 2026, 09:15",
         description = "Я оказалась в незнакомом городе, где все дома были необычных цветов, а улочки закручивались в спирали...",
         moodResId = R.string.mood_surprise,
-        tagsResIds = listOf(R.string.tag_city, R.string.tag_travel, R.string.tag_stars)
+        tags = allTags.drop(2).take(3)
     ),
     Dream(
         title = "Встреча с друзьями",
         date = "30 октября 2026, 07:45",
         description = "Мы созвонились и отправились в долгое путешествие за город...",
         moodResId = R.string.mood_joy,
-        tagsResIds = listOf(R.string.tag_friends, R.string.tag_travel)
+        tags = allTags.takeLast(2)
     )
 )
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun DreamsScreen() {
+    val context = LocalContext.current
     val isDarkTheme = MaterialTheme.colorScheme.background == DreamBackground
-    val exampleDreams = getExampleDreams()
+
+    // Загружаем теги из файла res/raw/tags.txt через BufferedReader
+    val tagsFromFile = remember(context) { loadTagsFromRaw(context) }
+    val exampleDreams = getExampleDreams(tagsFromFile)
 
     LazyColumn(
         modifier = Modifier
@@ -182,21 +207,21 @@ fun DreamsScreen() {
                     FilterChip(
                         selected = false,
                         onClick = { },
-                        label = { Text("${stringResource(R.string.mood_calm)}") },
+                        label = { Text(stringResource(R.string.mood_calm)) },
                         shape = RoundedCornerShape(12.dp)
                     )
 
                     FilterChip(
                         selected = false,
                         onClick = { },
-                        label = { Text("${stringResource(R.string.mood_surprise)}") },
+                        label = { Text(stringResource(R.string.mood_surprise)) },
                         shape = RoundedCornerShape(12.dp)
                     )
 
                     FilterChip(
                         selected = false,
                         onClick = { },
-                        label = { Text("${stringResource(R.string.mood_joy)}") },
+                        label = { Text(stringResource(R.string.mood_joy)) },
                         shape = RoundedCornerShape(12.dp)
                     )
                 }
@@ -311,7 +336,7 @@ private fun DreamCard(dream: Dream) {
                     color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f)
                 ) {
                     Text(
-                        text = "${stringResource(dream.moodResId)}",
+                        text = stringResource(dream.moodResId),
                         modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
                         style = MaterialTheme.typography.labelSmall,
                         fontWeight = FontWeight.SemiBold,
@@ -319,16 +344,17 @@ private fun DreamCard(dream: Dream) {
                     )
                 }
 
+                // Отображение тегов, загруженных из файла tags.txt
                 FlowRow(
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    dream.tagsResIds.forEach { tagResId ->
+                    dream.tags.forEach { tag ->
                         Surface(
                             shape = RoundedCornerShape(8.dp),
                             color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.2f)
                         ) {
                             Text(
-                                text = "#${stringResource(tagResId)}",
+                                text = "#$tag",
                                 modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
                                 style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)

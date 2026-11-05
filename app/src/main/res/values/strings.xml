@@ -78,32 +78,6 @@
     <string name="mood_scary">Страх</string>
     <string name="mood_sadness">Грусть</string>
 
-    <!-- Теги (Tags) -->
-    <string name="tag_sea">Вода</string>
-    <string name="tag_nature">Природа</string>
-    <string name="tag_whales">Деревня</string>
-    <string name="tag_work">Работа</string>
-    <string name="tag_city">Город</string>
-    <string name="tag_travel">Путешествие</string>
-    <string name="tag_stars">Звёзды</string>
-    <string name="tag_flight">Полёт</string>
-    <string name="tag_freedom">Свобода</string>
-    <string name="tag_clouds">Облака</string>
-    <string name="tag_forest">Лес</string>
-    <string name="tag_studying">Учёба</string>
-    <string name="tag_friends">Друзья</string>
-    <string name="tag_love">Любовь</string>
-    <string name="tag_family">Семья</string>
-    <string name="tag_fire">Огонь</string>
-    <string name="tag_wind">Ветер</string>
-    <string name="tag_scary">Кошмар</string>
-    <string name="tag_alone">Одиночество</string>
-    <string name="tag_holiday">Праздник</string>
-    <string name="tag_animals">Животные</string>
-    <string name="tag_war">Война</string>
-    <string name="tag_eat">Еда</string>
-    <string name="tag_plants">Растения</string>
-
     <!-- Профиль (ProfileScreen) -->
     <string name="user_name_default">Имя пользователя</string>
     <string name="user_age_default">Возраст: не указан</string>
