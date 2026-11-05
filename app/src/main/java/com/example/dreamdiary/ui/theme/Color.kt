@@ -17,3 +17,5 @@ val DarkBackground = Color(0xFF191521)
 val DarkSurface = Color(0xFF262132)
 val DarkText = Color(0xFFF2ECFA)
 val DarkSecondaryText = Color(0xFFB9AEC9)
+
+val HomeButtonDark = Color(0xFF262132)  // Фон кнопки в тёмной теме (насыщенный фиолетовый)

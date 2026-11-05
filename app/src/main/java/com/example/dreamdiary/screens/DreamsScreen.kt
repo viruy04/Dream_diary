@@ -36,17 +36,20 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.dreamdiary.R
+import com.example.dreamdiary.ui.theme.DreamBackground
+import com.example.dreamdiary.ui.theme.HomeButtonDark
+import com.example.dreamdiary.ui.theme.Lavender
 
 private data class Dream(
     val title: String,
     val date: String,
     val description: String,
     val moodResId: Int,
-    val moodEmoji: String,
     val tagsResIds: List<Int>
 )
 
@@ -57,7 +60,6 @@ private fun getExampleDreams() = listOf(
         date = "2 ноября 2026, 08:30",
         description = "Мне приснилось, что я гуляю по берегу моря. Вода была очень спокойной, шёл тёплый синий дождь...",
         moodResId = R.string.mood_calm,
-        moodEmoji = "🌊",
         tagsResIds = listOf(R.string.tag_sea, R.string.tag_nature)
     ),
     Dream(
@@ -65,7 +67,6 @@ private fun getExampleDreams() = listOf(
         date = "1 ноября 2026, 09:15",
         description = "Я оказалась в незнакомом городе, где все дома были необычных цветов, а улочки закручивались в спирали...",
         moodResId = R.string.mood_surprise,
-        moodEmoji = "😮",
         tagsResIds = listOf(R.string.tag_city, R.string.tag_travel, R.string.tag_stars)
     ),
     Dream(
@@ -73,7 +74,6 @@ private fun getExampleDreams() = listOf(
         date = "30 октября 2026, 07:45",
         description = "Мы созвонились и отправились в долгое путешествие за город...",
         moodResId = R.string.mood_joy,
-        moodEmoji = "😊",
         tagsResIds = listOf(R.string.tag_friends, R.string.tag_travel)
     )
 )
@@ -81,6 +81,7 @@ private fun getExampleDreams() = listOf(
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun DreamsScreen() {
+    val isDarkTheme = MaterialTheme.colorScheme.background == DreamBackground
     val exampleDreams = getExampleDreams()
 
     LazyColumn(
@@ -115,8 +116,8 @@ fun DreamsScreen() {
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.onPrimary
+                        containerColor = if (isDarkTheme) HomeButtonDark else Lavender,
+                        contentColor = Color.White
                     )
                 ) {
                     Row(
@@ -310,7 +311,7 @@ private fun DreamCard(dream: Dream) {
                     color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f)
                 ) {
                     Text(
-                        text = "${dream.moodEmoji} ${stringResource(dream.moodResId)}",
+                        text = "${stringResource(dream.moodResId)}",
                         modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
                         style = MaterialTheme.typography.labelSmall,
                         fontWeight = FontWeight.SemiBold,
