@@ -64,15 +64,15 @@ fun ProfileScreen(
 ) {
     var showThemeDialog by remember { mutableStateOf(false) }
 
-    BackHandler {
-        navController.navigate(Destination.Dreams.route) {
-            popUpTo(Destination.Home.route) {
-                inclusive = false
-            }
-            launchSingleTop = true
-            restoreState = false
-        }
-    }
+//    BackHandler {
+//        navController.navigate(Destination.Dreams.route) {
+//            popUpTo(Destination.Home.route) {
+//                inclusive = false
+//            }
+//            launchSingleTop = true
+//            restoreState = false
+//        }
+//    }
 
     Column(
         modifier = Modifier
