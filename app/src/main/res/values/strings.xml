@@ -56,14 +56,13 @@
     <string name="achievements_title">Достижения</string>
 
     <!-- Главный экран (HomeScreen) -->
-    <string name="greeting_default">Привет! Как прошла ночь? ✨</string>
-    <string name="button_new_dream">Записать новый сон</string>
+    <string name="greeting_default">Привет! Как прошла ночь?</string>
     <string name="quote_of_the_day">Цитата дня</string>
     <string name="my_space">Моё пространство</string>
 
     <!-- Экран сновидений (DreamsScreen) -->
     <string name="dreams_subtitle">Здесь хранятся истории твоих снов</string>
-    <string name="button_add_dream">Добавить новый сон</string>
+    <string name="button_add_dream">Записать новый сон</string>
     <string name="search_placeholder">Поиск по названию или тегам...</string>
     <string name="recent_entries">Последние записи</string>
 

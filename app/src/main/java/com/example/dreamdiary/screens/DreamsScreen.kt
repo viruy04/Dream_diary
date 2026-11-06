@@ -260,7 +260,7 @@ private fun DreamCard(dream: Dream) {
             ),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.85f)
+            containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 1f)
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {

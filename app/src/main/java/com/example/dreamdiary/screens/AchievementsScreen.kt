@@ -125,7 +125,8 @@ fun AchievementsScreen() {
         columns = GridCells.Fixed(2),
         modifier = Modifier
             .fillMaxSize()
-            //.background(MaterialTheme.colorScheme.background)
+            //
+            // background(MaterialTheme.colorScheme.background)
             .padding(horizontal = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)

@@ -104,7 +104,7 @@ fun HomeScreen(navController: NavHostController) {
                     contentDescription = null
                 )
                 Text(
-                    text = stringResource(R.string.button_new_dream),
+                    text = stringResource(R.string.button_add_dream),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -281,8 +281,8 @@ private fun SpaceCard(
 private fun getGreetingText(): String {
     val hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
     return when (hour) {
-        in 4..11 -> "Доброе утро! Как прошла ночь? ✨"
-        in 12..17 -> "Добрый день! Готовы вспомнить сон? 🌙"
-        else -> "Добрый вечер! Готовы к ночным историям? 🌌"
+        in 4..11 -> "Доброе утро! Как прошла ночь?"
+        in 12..17 -> "Добрый день! Готовы вспомнить сон?"
+        else -> "Добрый вечер! Готовы к ночным историям?"
     }
 }
