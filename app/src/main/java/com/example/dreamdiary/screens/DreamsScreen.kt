@@ -18,9 +18,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -34,8 +37,13 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -62,14 +70,13 @@ private data class Dream(
 fun loadTagsFromRaw(context: Context): List<String> {
     return try {
         context.resources.openRawResource(R.raw.tags)
-            .bufferedReader() // <--- Используем BufferedReader для чтения текстового файла
+            .bufferedReader()
             .use { reader ->
                 reader.readLines()
                     .map { it.trim() }
                     .filter { it.isNotEmpty() }
             }
     } catch (e: Exception) {
-        // Если файл ещё не создан, возвращаем базовые теги
         listOf("Вода", "Природа", "Город", "Путешествие")
     }
 }
@@ -81,7 +88,7 @@ private fun getExampleDreams(allTags: List<String>) = listOf(
         date = "2 ноября 2026, 08:30",
         description = "Мне приснилось, что я гуляю по берегу моря. Вода была очень спокойной, шёл тёплый синий дождь...",
         moodResId = R.string.mood_calm,
-        tags = allTags.take(2) // Берём первые теги из tags.txt
+        tags = allTags.take(2)
     ),
     Dream(
         title = "Необычный город",
@@ -104,6 +111,9 @@ private fun getExampleDreams(allTags: List<String>) = listOf(
 fun DreamsScreen() {
     val context = LocalContext.current
     val isDarkTheme = MaterialTheme.colorScheme.background == DreamBackground
+
+    // Состояние открытия диалога выбора несколько настроений
+    var showFilterDialog by remember { mutableStateOf(false) }
 
     // Загружаем теги из файла res/raw/tags.txt через BufferedReader
     val tagsFromFile = remember(context) { loadTagsFromRaw(context) }
@@ -164,6 +174,7 @@ fun DreamsScreen() {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
+                // Поле поиска
                 OutlinedTextField(
                     value = "",
                     onValueChange = { },
@@ -188,10 +199,10 @@ fun DreamsScreen() {
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                // Чипы настроений из ресурсов
-                FlowRow(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                // Строка с кнопкой «Все» и иконкой Фильтра
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp), // Маленький отступ между ними
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     FilterChip(
                         selected = true,
@@ -204,26 +215,17 @@ fun DreamsScreen() {
                         )
                     )
 
-                    FilterChip(
-                        selected = false,
-                        onClick = { },
-                        label = { Text(stringResource(R.string.mood_calm)) },
-                        shape = RoundedCornerShape(12.dp)
-                    )
-
-                    FilterChip(
-                        selected = false,
-                        onClick = { },
-                        label = { Text(stringResource(R.string.mood_surprise)) },
-                        shape = RoundedCornerShape(12.dp)
-                    )
-
-                    FilterChip(
-                        selected = false,
-                        onClick = { },
-                        label = { Text(stringResource(R.string.mood_joy)) },
-                        shape = RoundedCornerShape(12.dp)
-                    )
+                    // Иконка фильтра сразу после кнопки «Все»
+                    IconButton(
+                        onClick = { showFilterDialog = true },
+                        modifier = Modifier.size(36.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.FilterList,
+                            contentDescription = "Фильтр настроений",
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -245,6 +247,99 @@ fun DreamsScreen() {
             Spacer(modifier = Modifier.height(16.dp))
         }
     }
+
+    // Диалоговое окно выбора нескольких настроений
+    if (showFilterDialog) {
+        MoodFilterDialog(
+            onDismiss = { showFilterDialog = false }
+        )
+    }
+}
+
+/**
+ * Окно выбора нескольких настроений одновременно
+ */
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun MoodFilterDialog(
+    onDismiss: () -> Unit
+) {
+    val moods = listOf(
+        R.string.mood_calm,
+        R.string.mood_surprise,
+        R.string.mood_joy,
+        R.string.mood_scary,
+        R.string.mood_sadness,
+        R.string.mood_angry,
+        R.string.mood_love,
+        R.string.mood_inspiration
+    )
+
+    // Выбранные настроения (множественный выбор)
+    val selectedMoods = remember { mutableStateListOf<Int>() }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text(
+                text = "Фильтр настроений",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold
+            )
+        },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                Text(
+                    text = "Выберите одно или несколько настроений:",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                )
+
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    moods.forEach { moodResId ->
+                        val isSelected = selectedMoods.contains(moodResId)
+                        FilterChip(
+                            selected = isSelected,
+                            onClick = {
+                                if (isSelected) {
+                                    selectedMoods.remove(moodResId)
+                                } else {
+                                    selectedMoods.add(moodResId)
+                                }
+                            },
+                            label = { Text(stringResource(moodResId)) },
+                            leadingIcon = if (isSelected) {
+                                { Icon(Icons.Default.Check, contentDescription = null, modifier = Modifier.size(14.dp)) }
+                            } else null,
+                            shape = RoundedCornerShape(12.dp),
+                            colors = FilterChipDefaults.filterChipColors(
+                                selectedContainerColor = MaterialTheme.colorScheme.primary,
+                                selectedLabelColor = MaterialTheme.colorScheme.onPrimary
+                            )
+                        )
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            Button(onClick = onDismiss) {
+                Text("Применить")
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = {
+                    selectedMoods.clear()
+                    onDismiss()
+                }
+            ) {
+                Text("Сбросить")
+            }
+        }
+    )
 }
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -344,7 +439,6 @@ private fun DreamCard(dream: Dream) {
                     )
                 }
 
-                // Отображение тегов, загруженных из файла tags.txt
                 FlowRow(
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
