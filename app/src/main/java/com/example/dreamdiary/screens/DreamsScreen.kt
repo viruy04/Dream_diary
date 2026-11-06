@@ -108,7 +108,9 @@ private fun getExampleDreams(allTags: List<String>) = listOf(
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun DreamsScreen() {
+fun DreamsScreen(
+    onAddDreamClick: () -> Unit = {}
+) {
     val context = LocalContext.current
     val isDarkTheme = MaterialTheme.colorScheme.background == DreamBackground
 
@@ -147,7 +149,7 @@ fun DreamsScreen() {
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Button(
-                    onClick = { },
+                    onClick = onAddDreamClick,
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
                     colors = ButtonDefaults.buttonColors(

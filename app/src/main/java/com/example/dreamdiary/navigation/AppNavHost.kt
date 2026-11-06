@@ -20,7 +20,8 @@ fun AppNavHost(
     navController: NavHostController,
     modifier: Modifier = Modifier,
     themeMode: ThemeMode,
-    onThemeChange: (ThemeMode) -> Unit
+    onThemeChange: (ThemeMode) -> Unit,
+    onAddDreamClick: () -> Unit = {}
 ) {
     NavHost(
         navController = navController,
@@ -28,11 +29,11 @@ fun AppNavHost(
         modifier = modifier
     ) {
         composable(Destination.Home.route) {
-            HomeScreen(navController)
+            HomeScreen(navController = navController, onAddDreamClick = onAddDreamClick)
         }
 
         composable(Destination.Dreams.route) {
-            DreamsScreen()
+            DreamsScreen(onAddDreamClick = onAddDreamClick)
         }
 
         composable(Destination.Profile.route) {

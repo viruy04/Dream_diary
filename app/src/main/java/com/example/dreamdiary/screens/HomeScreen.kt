@@ -56,7 +56,8 @@ import com.example.dreamdiary.ui.theme.Lavender
 import java.util.Calendar
 
 @Composable
-fun HomeScreen(navController: NavHostController) {
+fun HomeScreen(navController: NavHostController,
+               onAddDreamClick: () -> Unit = {} ) {
     val isDarkTheme = MaterialTheme.colorScheme.background == DreamBackground
 
     Column(
@@ -86,7 +87,7 @@ fun HomeScreen(navController: NavHostController) {
 
         // Кнопка быстрого перехода «Записать новый сон»
         Button(
-            onClick = { },
+            onClick = onAddDreamClick,
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
             colors = ButtonDefaults.buttonColors(
