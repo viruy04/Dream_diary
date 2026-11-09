@@ -1,5 +1,8 @@
 package com.example.dreamdiary.navigation
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -26,7 +29,14 @@ fun AppNavHost(
     NavHost(
         navController = navController,
         startDestination = Destination.Home.route,
-        modifier = modifier
+        modifier = modifier,
+        // «Fade through»: старый экран быстро гаснет, затем проявляется новый.
+        // Экраны прозрачные (фон лежит под Scaffold), поэтому они не должны
+        // быть видны одновременно - иначе тексты накладываются и мерцают.
+        enterTransition = { fadeIn(tween(durationMillis = 210, delayMillis = 90)) },
+        exitTransition = { fadeOut(tween(durationMillis = 90)) },
+        popEnterTransition = { fadeIn(tween(durationMillis = 210, delayMillis = 90)) },
+        popExitTransition = { fadeOut(tween(durationMillis = 90)) }
     ) {
         composable(Destination.Home.route) {
             HomeScreen(navController = navController, onAddDreamClick = onAddDreamClick)

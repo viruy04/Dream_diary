@@ -116,6 +116,11 @@ fun ConstellationScreen() {
         }
     }
 
+    // Считаем связи один раз, а не на каждой перерисовке Canvas
+    val connectedFlags = remember(dreams) {
+        dreams.map { dream -> getConnectedDreams(dream).isNotEmpty() }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -212,7 +217,7 @@ fun ConstellationScreen() {
                 }
 
                 dreams.forEachIndexed { index, dream ->
-                    val connected = getConnectedDreams(dream).isNotEmpty()
+                    val connected = connectedFlags[index]
                     val starColor = if (connected) brightStar else ordinaryStar
                     val radius = if (connected) 7.dp.toPx() else 5.dp.toPx()
 
