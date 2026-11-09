@@ -42,14 +42,8 @@ fun NavigationBarExample(
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry?.destination?.route
 
-    // На этих экранах нижнее меню скрыто, вместо него в углу кнопка «Назад»
-    val hideBottomBarRoutes = setOf(
-        Destination.Calendar.route,
-        Destination.Statistics.route,
-        Destination.Constellation.route,
-        Destination.Achievements.route
-    )
-    val showBottomBar = currentRoute !in hideBottomBarRoutes
+    // На экранах из NavRoutes.bottomBarHidden нижняя панель скрыта (там кнопка «Назад»)
+    val showBottomBar = currentRoute !in NavRoutes.bottomBarHidden
 
     val items = listOf(
         NavigationItem.Home,
@@ -91,8 +85,8 @@ fun NavigationBarExample(
             bottomBar = {
                 AnimatedVisibility(
                     visible = showBottomBar,
-                    enter = fadeIn(tween(200)) + expandVertically(tween(200)),
-                    exit = fadeOut(tween(100)) + shrinkVertically(tween(200))
+                    enter = bottomBarEnter(),
+                    exit = bottomBarExit()
                 ) {
                     NavigationBar(
                         containerColor = Color.Transparent

@@ -9,13 +9,16 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.AlertDialog
@@ -47,6 +50,12 @@ import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
+// Размер плашки со звёздным небом: ширина / высота.
+// Больше число - плашка ниже и шире, меньше - выше и уже (0.65 ≈ высота в 1.5 раза больше ширины).
+private const val MapAspectRatio = 0.55f
+
+// Отступ плашки от краёв экрана слева и справа.
+private val MapScreenHorizontalPadding = 16.dp
 private data class DreamStar(
     val title: String,
     val tags: List<String>,
@@ -125,8 +134,9 @@ fun ConstellationScreen(onBack: () -> Unit = {}) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
-    ) {
+            .verticalScroll(rememberScrollState())
+            .padding(horizontal = MapScreenHorizontalPadding, vertical = 16.dp)
+    ){
         ScreenHeader(
             title = stringResource(R.string.constellation_title),
             onBack = onBack,
@@ -152,7 +162,7 @@ fun ConstellationScreen(onBack: () -> Unit = {}) {
         BoxWithConstraints(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f)
+                .aspectRatio(MapAspectRatio)
                 .background(
                     color = mapColor,
                     shape = RoundedCornerShape(18.dp)
