@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Цвет окна до первого кадра Compose (совпадает с DreamBackground) -->
+    <color name="window_bg">#FFFAF7FC</color>
+</resources>

@@ -1,5 +1,7 @@
 package com.example.dreamdiary.navigation
 
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -49,19 +51,25 @@ fun NavigationBarExample(
 
     Box(modifier = Modifier.fillMaxSize()) {
 
-        // Фоновое изображение в зависимости от темы
-        Image(
-            painter = painterResource(
-                id = if (isDarkTheme) {
-                    R.drawable.dream_background_dark
-                } else {
-                    R.drawable.dream_background_light
-                }
-            ),
-            contentDescription = null,
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
-        )
+        // Фоновое изображение в зависимости от темы (плавная смена без «щелчка»)
+        Crossfade(
+            targetState = isDarkTheme,
+            animationSpec = tween(300),
+            label = "background"
+        ) { dark ->
+            Image(
+                painter = painterResource(
+                    id = if (dark) {
+                        R.drawable.dream_background_dark
+                    } else {
+                        R.drawable.dream_background_light
+                    }
+                ),
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
+            )
+        }
 
         Scaffold(
             modifier = Modifier.fillMaxSize(),
