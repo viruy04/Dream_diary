@@ -1,5 +1,10 @@
 package com.example.dreamdiary.navigation
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -36,6 +41,15 @@ fun NavigationBarExample(
     var showAddDreamDialog by remember { mutableStateOf(false) }
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry?.destination?.route
+
+    // На этих экранах нижнее меню скрыто, вместо него в углу кнопка «Назад»
+    val hideBottomBarRoutes = setOf(
+        Destination.Calendar.route,
+        Destination.Statistics.route,
+        Destination.Constellation.route,
+        Destination.Achievements.route
+    )
+    val showBottomBar = currentRoute !in hideBottomBarRoutes
 
     val items = listOf(
         NavigationItem.Home,
@@ -75,35 +89,41 @@ fun NavigationBarExample(
             modifier = Modifier.fillMaxSize(),
             containerColor = Color.Transparent,
             bottomBar = {
-                NavigationBar(
-                    containerColor = Color.Transparent
+                AnimatedVisibility(
+                    visible = showBottomBar,
+                    enter = fadeIn(tween(200)) + expandVertically(tween(200)),
+                    exit = fadeOut(tween(100)) + shrinkVertically(tween(200))
                 ) {
-                    items.forEach { item ->
-                        NavigationBarItem(
-                            selected = currentRoute == item.route,
-                            onClick = {
-                                navController.navigate(item.route) {
-                                    popUpTo(navController.graph.startDestinationId) {
-                                        saveState = true
+                    NavigationBar(
+                        containerColor = Color.Transparent
+                    ) {
+                        items.forEach { item ->
+                            NavigationBarItem(
+                                selected = currentRoute == item.route,
+                                onClick = {
+                                    navController.navigate(item.route) {
+                                        popUpTo(navController.graph.startDestinationId) {
+                                            saveState = true
+                                        }
+                                        launchSingleTop = true
+                                        restoreState = true
                                     }
-                                    launchSingleTop = true
-                                    restoreState = true
+                                },
+                                icon = {
+                                    Icon(
+                                        imageVector = if (currentRoute == item.route) {
+                                            item.selectedIcon
+                                        } else {
+                                            item.icon
+                                        },
+                                        contentDescription = item.title
+                                    )
+                                },
+                                label = {
+                                    Text(item.title)
                                 }
-                            },
-                            icon = {
-                                Icon(
-                                    imageVector = if (currentRoute == item.route) {
-                                        item.selectedIcon
-                                    } else {
-                                        item.icon
-                                    },
-                                    contentDescription = item.title
-                                )
-                            },
-                            label = {
-                                Text(item.title)
-                            }
-                        )
+                            )
+                        }
                     }
                 }
             }

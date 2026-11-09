@@ -1,5 +1,7 @@
 package com.example.dreamdiary.navigation
 
+import androidx.activity.compose.BackHandler
+import androidx.lifecycle.Lifecycle
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -26,6 +28,15 @@ fun AppNavHost(
     onThemeChange: (ThemeMode) -> Unit,
     onAddDreamClick: () -> Unit = {}
 ) {
+    // Общий «назад» для кнопки в приложении и системной кнопки/жеста.
+    // Проверка состояния защищает от двойного нажатия во время анимации.
+    val goBack: () -> Unit = {
+        val entry = navController.currentBackStackEntry
+        if (entry?.lifecycle?.currentState == Lifecycle.State.RESUMED) {
+            navController.popBackStack()
+        }
+    }
+
     NavHost(
         navController = navController,
         startDestination = Destination.Home.route,
@@ -55,18 +66,23 @@ fun AppNavHost(
         }
 
         composable(Destination.Calendar.route) {
-            CalendarScreen()
+            BackHandler(onBack = goBack)
+            CalendarScreen(onBack = goBack)
         }
 
         composable(Destination.Statistics.route) {
-            StatisticsScreen()
+            BackHandler(onBack = goBack)
+            StatisticsScreen(onBack = goBack)
         }
 
         composable(Destination.Constellation.route) {
-            ConstellationScreen()
+            BackHandler(onBack = goBack)
+            ConstellationScreen(onBack = goBack)
         }
+
         composable(Destination.Achievements.route) {
-            AchievementsScreen()
+            BackHandler(onBack = goBack)
+            AchievementsScreen(onBack = goBack)
         }
     }
 }

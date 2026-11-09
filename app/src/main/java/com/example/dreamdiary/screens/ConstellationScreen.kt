@@ -42,6 +42,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.dreamdiary.R
+import com.example.dreamdiary.components.ScreenHeader
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
@@ -80,7 +81,7 @@ private fun DrawScope.drawStar(
 }
 
 @Composable
-fun ConstellationScreen() {
+fun ConstellationScreen(onBack: () -> Unit = {}) {
     var showInfo by remember { mutableStateOf(false) }
     var selectedDream by remember { mutableStateOf<DreamStar?>(null) }
 
@@ -126,26 +127,19 @@ fun ConstellationScreen() {
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = stringResource(R.string.constellation_title),
-                style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold,
-                color = colors.onBackground
-            )
-
-            IconButton(onClick = { showInfo = true }) {
-                Icon(
-                    imageVector = Icons.Default.Info,
-                    contentDescription = "Информация",
-                    tint = colors.primary
-                )
+        ScreenHeader(
+            title = stringResource(R.string.constellation_title),
+            onBack = onBack,
+            trailing = {
+                IconButton(onClick = { showInfo = true }) {
+                    Icon(
+                        imageVector = Icons.Default.Info,
+                        contentDescription = "Информация",
+                        tint = colors.primary
+                    )
+                }
             }
-        }
+        )
 
         Text(
             text = stringResource(R.string.constellation_subtitle),
