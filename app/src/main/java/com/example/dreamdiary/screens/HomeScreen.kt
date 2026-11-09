@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,11 +21,14 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.FormatQuote
 import androidx.compose.material.icons.outlined.AutoAwesome
 import androidx.compose.material.icons.outlined.BarChart
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.EmojiEvents
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -46,10 +50,16 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.dreamdiary.R
 import com.example.dreamdiary.navigation.Destination
+import com.example.dreamdiary.ui.theme.DreamBackground
+import com.example.dreamdiary.ui.theme.HomeButtonDark
+import com.example.dreamdiary.ui.theme.Lavender
 import java.util.Calendar
 
 @Composable
-fun HomeScreen(navController: NavHostController) {
+fun HomeScreen(navController: NavHostController,
+               onAddDreamClick: () -> Unit = {} ) {
+    val isDarkTheme = MaterialTheme.colorScheme.background == DreamBackground
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -72,6 +82,35 @@ fun HomeScreen(navController: NavHostController) {
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
         )
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        // Кнопка быстрого перехода «Записать новый сон»
+        Button(
+            onClick = onAddDreamClick,
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = if (isDarkTheme) HomeButtonDark else Lavender,
+                contentColor = Color.White
+            )
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.padding(vertical = 4.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = null
+                )
+                Text(
+                    text = stringResource(R.string.button_add_dream),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
+        }
 
         Spacer(modifier = Modifier.height(20.dp))
 
@@ -243,8 +282,8 @@ private fun SpaceCard(
 private fun getGreetingText(): String {
     val hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
     return when (hour) {
-        in 4..11 -> "Доброе утро! Как прошла ночь? ✨"
-        in 12..17 -> "Добрый день! Готовы вспомнить сон? 🌙"
-        else -> "Добрый вечер! Готовы к ночным историям? 🌌"
+        in 4..11 -> "Доброе утро! Как прошла ночь?"
+        in 12..17 -> "Добрый день! Готовы вспомнить сон?"
+        else -> "Добрый вечер! Готовы к ночным историям?"
     }
 }

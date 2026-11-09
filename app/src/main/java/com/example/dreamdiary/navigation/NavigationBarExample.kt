@@ -16,9 +16,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.dreamdiary.R
+import com.example.dreamdiary.components.AddDreamDialog
 import com.example.dreamdiary.ui.theme.ThemeMode
 
 @Composable
@@ -27,6 +31,7 @@ fun NavigationBarExample(
     themeMode: ThemeMode,
     onThemeChange: (ThemeMode) -> Unit
 ) {
+    var showAddDreamDialog by remember { mutableStateOf(false) }
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry?.destination?.route
 
@@ -99,7 +104,13 @@ fun NavigationBarExample(
                 navController = navController,
                 modifier = Modifier.padding(innerPadding),
                 themeMode = themeMode,
-                onThemeChange = onThemeChange
+                onThemeChange = onThemeChange,
+                onAddDreamClick = { showAddDreamDialog = true }
+            )
+        }
+        if (showAddDreamDialog) {
+            AddDreamDialog(
+                onDismiss = { showAddDreamDialog = false }
             )
         }
     }

@@ -1,5 +1,6 @@
 package com.example.dreamdiary.screens
 
+import android.content.Context
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,9 +18,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -33,55 +37,89 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.dreamdiary.R
+import com.example.dreamdiary.ui.theme.DreamBackground
+import com.example.dreamdiary.ui.theme.HomeButtonDark
+import com.example.dreamdiary.ui.theme.Lavender
 
 private data class Dream(
     val title: String,
     val date: String,
     val description: String,
     val moodResId: Int,
-    val moodEmoji: String,
-    val tagsResIds: List<Int>
+    val tags: List<String>
 )
 
+/**
+ * Чтение списка тегов из файла res/raw/tags.txt с помощью BufferedReader
+ */
+fun loadTagsFromRaw(context: Context): List<String> {
+    return try {
+        context.resources.openRawResource(R.raw.tags)
+            .bufferedReader()
+            .use { reader ->
+                reader.readLines()
+                    .map { it.trim() }
+                    .filter { it.isNotEmpty() }
+            }
+    } catch (e: Exception) {
+        listOf("Вода", "Природа", "Город", "Путешествие")
+    }
+}
+
 @Composable
-private fun getExampleDreams() = listOf(
+private fun getExampleDreams(allTags: List<String>) = listOf(
     Dream(
         title = "Прогулка у моря",
         date = "2 ноября 2026, 08:30",
         description = "Мне приснилось, что я гуляю по берегу моря. Вода была очень спокойной, шёл тёплый синий дождь...",
         moodResId = R.string.mood_calm,
-        moodEmoji = "🌊",
-        tagsResIds = listOf(R.string.tag_sea, R.string.tag_nature)
+        tags = allTags.take(2)
     ),
     Dream(
         title = "Необычный город",
         date = "1 ноября 2026, 09:15",
         description = "Я оказалась в незнакомом городе, где все дома были необычных цветов, а улочки закручивались в спирали...",
         moodResId = R.string.mood_surprise,
-        moodEmoji = "😮",
-        tagsResIds = listOf(R.string.tag_city, R.string.tag_travel, R.string.tag_stars)
+        tags = allTags.drop(2).take(3)
     ),
     Dream(
         title = "Встреча с друзьями",
         date = "30 октября 2026, 07:45",
         description = "Мы созвонились и отправились в долгое путешествие за город...",
         moodResId = R.string.mood_joy,
-        moodEmoji = "😊",
-        tagsResIds = listOf(R.string.tag_friends, R.string.tag_travel)
+        tags = allTags.takeLast(2)
     )
 )
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun DreamsScreen() {
-    val exampleDreams = getExampleDreams()
+fun DreamsScreen(
+    onAddDreamClick: () -> Unit = {}
+) {
+    val context = LocalContext.current
+    val isDarkTheme = MaterialTheme.colorScheme.background == DreamBackground
+
+    // Состояние открытия диалога выбора несколько настроений
+    var showFilterDialog by remember { mutableStateOf(false) }
+
+    // Загружаем теги из файла res/raw/tags.txt через BufferedReader
+    val tagsFromFile = remember(context) { loadTagsFromRaw(context) }
+    val exampleDreams = getExampleDreams(tagsFromFile)
 
     LazyColumn(
         modifier = Modifier
@@ -111,12 +149,12 @@ fun DreamsScreen() {
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Button(
-                    onClick = { },
+                    onClick = onAddDreamClick,
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.onPrimary
+                        containerColor = if (isDarkTheme) HomeButtonDark else Lavender,
+                        contentColor = Color.White
                     )
                 ) {
                     Row(
@@ -138,6 +176,7 @@ fun DreamsScreen() {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
+                // Поле поиска
                 OutlinedTextField(
                     value = "",
                     onValueChange = { },
@@ -162,10 +201,10 @@ fun DreamsScreen() {
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                // Чипы настроений из ресурсов
-                FlowRow(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                // Строка с кнопкой «Все» и иконкой Фильтра
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp), // Маленький отступ между ними
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     FilterChip(
                         selected = true,
@@ -178,26 +217,17 @@ fun DreamsScreen() {
                         )
                     )
 
-                    FilterChip(
-                        selected = false,
-                        onClick = { },
-                        label = { Text("${stringResource(R.string.mood_calm)}") },
-                        shape = RoundedCornerShape(12.dp)
-                    )
-
-                    FilterChip(
-                        selected = false,
-                        onClick = { },
-                        label = { Text("${stringResource(R.string.mood_surprise)}") },
-                        shape = RoundedCornerShape(12.dp)
-                    )
-
-                    FilterChip(
-                        selected = false,
-                        onClick = { },
-                        label = { Text("${stringResource(R.string.mood_joy)}") },
-                        shape = RoundedCornerShape(12.dp)
-                    )
+                    // Иконка фильтра сразу после кнопки «Все»
+                    IconButton(
+                        onClick = { showFilterDialog = true },
+                        modifier = Modifier.size(36.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.FilterList,
+                            contentDescription = "Фильтр настроений",
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -219,6 +249,99 @@ fun DreamsScreen() {
             Spacer(modifier = Modifier.height(16.dp))
         }
     }
+
+    // Диалоговое окно выбора нескольких настроений
+    if (showFilterDialog) {
+        MoodFilterDialog(
+            onDismiss = { showFilterDialog = false }
+        )
+    }
+}
+
+/**
+ * Окно выбора нескольких настроений одновременно
+ */
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun MoodFilterDialog(
+    onDismiss: () -> Unit
+) {
+    val moods = listOf(
+        R.string.mood_calm,
+        R.string.mood_surprise,
+        R.string.mood_joy,
+        R.string.mood_scary,
+        R.string.mood_sadness,
+        R.string.mood_angry,
+        R.string.mood_love,
+        R.string.mood_inspiration
+    )
+
+    // Выбранные настроения (множественный выбор)
+    val selectedMoods = remember { mutableStateListOf<Int>() }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text(
+                text = "Фильтр настроений",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold
+            )
+        },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                Text(
+                    text = "Выберите одно или несколько настроений:",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                )
+
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    moods.forEach { moodResId ->
+                        val isSelected = selectedMoods.contains(moodResId)
+                        FilterChip(
+                            selected = isSelected,
+                            onClick = {
+                                if (isSelected) {
+                                    selectedMoods.remove(moodResId)
+                                } else {
+                                    selectedMoods.add(moodResId)
+                                }
+                            },
+                            label = { Text(stringResource(moodResId)) },
+                            leadingIcon = if (isSelected) {
+                                { Icon(Icons.Default.Check, contentDescription = null, modifier = Modifier.size(14.dp)) }
+                            } else null,
+                            shape = RoundedCornerShape(12.dp),
+                            colors = FilterChipDefaults.filterChipColors(
+                                selectedContainerColor = MaterialTheme.colorScheme.primary,
+                                selectedLabelColor = MaterialTheme.colorScheme.onPrimary
+                            )
+                        )
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            Button(onClick = onDismiss) {
+                Text("Применить")
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = {
+                    selectedMoods.clear()
+                    onDismiss()
+                }
+            ) {
+                Text("Сбросить")
+            }
+        }
+    )
 }
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -234,7 +357,7 @@ private fun DreamCard(dream: Dream) {
             ),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.85f)
+            containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 1f)
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
@@ -310,7 +433,7 @@ private fun DreamCard(dream: Dream) {
                     color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f)
                 ) {
                     Text(
-                        text = "${dream.moodEmoji} ${stringResource(dream.moodResId)}",
+                        text = stringResource(dream.moodResId),
                         modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
                         style = MaterialTheme.typography.labelSmall,
                         fontWeight = FontWeight.SemiBold,
@@ -321,13 +444,13 @@ private fun DreamCard(dream: Dream) {
                 FlowRow(
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    dream.tagsResIds.forEach { tagResId ->
+                    dream.tags.forEach { tag ->
                         Surface(
                             shape = RoundedCornerShape(8.dp),
                             color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.2f)
                         ) {
                             Text(
-                                text = "#${stringResource(tagResId)}",
+                                text = "#$tag",
                                 modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
                                 style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
