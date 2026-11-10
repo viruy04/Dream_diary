@@ -1,43 +1,61 @@
 package com.example.dreamdiary.navigation
 
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.dreamdiary.screens.HomeScreen
-import com.example.dreamdiary.screens.DreamsScreen
-import com.example.dreamdiary.screens.ProfileScreen
-import com.example.dreamdiary.screens.CalendarScreen
-import com.example.dreamdiary.screens.StatisticsScreen
-import com.example.dreamdiary.screens.ConstellationScreen
-import androidx.compose.material3.Text
 import com.example.dreamdiary.screens.AchievementsScreen
+import com.example.dreamdiary.screens.CalendarScreen
+import com.example.dreamdiary.screens.ConstellationScreen
+import com.example.dreamdiary.screens.DreamsScreen
+import com.example.dreamdiary.screens.HomeScreen
+import com.example.dreamdiary.screens.ProfileScreen
+import com.example.dreamdiary.screens.StatisticsScreen
+import com.example.dreamdiary.screens.WelcomeScreen
 import com.example.dreamdiary.ui.theme.ThemeMode
 
 @Composable
 fun AppNavHost(
     navController: NavHostController,
     modifier: Modifier = Modifier,
+    startDestination: String = Destination.Home.route,
     themeMode: ThemeMode,
     onThemeChange: (ThemeMode) -> Unit,
     onAddDreamClick: () -> Unit = {}
 ) {
+    // «Назад» для кнопки в интерфейсе. Системную кнопку и жест обрабатывает сам NavHost
+    // (BackHandler здесь не нужен - он бы отключил предиктивную анимацию жеста).
+    // Проверка состояния защищает от двойного нажатия во время анимации.
+    val goBack: () -> Unit = {
+        val entry = navController.currentBackStackEntry
+        if (entry?.lifecycle?.currentState == Lifecycle.State.RESUMED) {
+            navController.popBackStack()
+        }
+    }
+
     NavHost(
         navController = navController,
-        startDestination = Destination.Home.route,
+        startDestination = startDestination,
         modifier = modifier,
-        // «Fade through»: старый экран быстро гаснет, затем проявляется новый.
-        // Экраны прозрачные (фон лежит под Scaffold), поэтому они не должны
-        // быть видны одновременно - иначе тексты накладываются и мерцают.
-        enterTransition = { fadeIn(tween(durationMillis = 210, delayMillis = 90)) },
-        exitTransition = { fadeOut(tween(durationMillis = 90)) },
-        popEnterTransition = { fadeIn(tween(durationMillis = 210, delayMillis = 90)) },
-        popExitTransition = { fadeOut(tween(durationMillis = 90)) }
+        enterTransition = { navEnter() },
+        exitTransition = { navExit() },
+        popEnterTransition = { navPopEnter() },
+        popExitTransition = { navPopExit() }
     ) {
+        composable(Destination.Welcome.route) {
+            WelcomeScreen(
+                onContinue = {
+                    navController.navigate(Destination.Home.route) {
+                        // Стартовый экран убираем из стека: «назад» с главной закрывает приложение
+                        popUpTo(Destination.Welcome.route) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                }
+            )
+        }
+
         composable(Destination.Home.route) {
             HomeScreen(navController = navController, onAddDreamClick = onAddDreamClick)
         }
@@ -55,18 +73,19 @@ fun AppNavHost(
         }
 
         composable(Destination.Calendar.route) {
-            CalendarScreen()
+            CalendarScreen(onBack = goBack)
         }
 
         composable(Destination.Statistics.route) {
-            StatisticsScreen()
+            StatisticsScreen(onBack = goBack)
         }
 
         composable(Destination.Constellation.route) {
-            ConstellationScreen()
+            ConstellationScreen(onBack = goBack)
         }
+
         composable(Destination.Achievements.route) {
-            AchievementsScreen()
+            AchievementsScreen(onBack = goBack)
         }
     }
 }

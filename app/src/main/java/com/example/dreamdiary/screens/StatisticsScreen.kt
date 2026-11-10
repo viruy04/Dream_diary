@@ -24,6 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.dreamdiary.R
+import com.example.dreamdiary.components.ScreenHeader
 
 private data class MoodStatistic(
     val name: String,
@@ -32,7 +33,7 @@ private data class MoodStatistic(
 )
 
 @Composable
-fun StatisticsScreen() {
+fun StatisticsScreen(onBack: () -> Unit = {}) {
     val moods = listOf(
         MoodStatistic(stringResource(R.string.mood_joy), "😊", 5),
         MoodStatistic(stringResource(R.string.mood_calm), "🌊", 3),
@@ -48,11 +49,9 @@ fun StatisticsScreen() {
             .verticalScroll(rememberScrollState())
             .padding(20.dp)
     ) {
-        Text(
-            text = stringResource(R.string.statistics_title),
-            style = MaterialTheme.typography.headlineMedium,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onBackground
+        ScreenHeader(
+            title = stringResource(R.string.statistics_title),
+            onBack = onBack
         )
 
         Spacer(modifier = Modifier.height(20.dp))

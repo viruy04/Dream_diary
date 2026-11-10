@@ -9,13 +9,16 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.AlertDialog
@@ -42,10 +45,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.dreamdiary.R
+import com.example.dreamdiary.components.ScreenHeader
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
+// Размер плашки со звёздным небом: ширина / высота.
+// Больше число - плашка ниже и шире, меньше - выше и уже (0.65 ≈ высота в 1.5 раза больше ширины).
+private const val MapAspectRatio = 0.55f
+
+// Отступ плашки от краёв экрана слева и справа.
+private val MapScreenHorizontalPadding = 16.dp
 private data class DreamStar(
     val title: String,
     val tags: List<String>,
@@ -80,7 +90,7 @@ private fun DrawScope.drawStar(
 }
 
 @Composable
-fun ConstellationScreen() {
+fun ConstellationScreen(onBack: () -> Unit = {}) {
     var showInfo by remember { mutableStateOf(false) }
     var selectedDream by remember { mutableStateOf<DreamStar?>(null) }
 
@@ -124,28 +134,22 @@ fun ConstellationScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = stringResource(R.string.constellation_title),
-                style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold,
-                color = colors.onBackground
-            )
-
-            IconButton(onClick = { showInfo = true }) {
-                Icon(
-                    imageVector = Icons.Default.Info,
-                    contentDescription = "Информация",
-                    tint = colors.primary
-                )
+            .verticalScroll(rememberScrollState())
+            .padding(horizontal = MapScreenHorizontalPadding, vertical = 16.dp)
+    ){
+        ScreenHeader(
+            title = stringResource(R.string.constellation_title),
+            onBack = onBack,
+            trailing = {
+                IconButton(onClick = { showInfo = true }) {
+                    Icon(
+                        imageVector = Icons.Default.Info,
+                        contentDescription = "Информация",
+                        tint = colors.primary
+                    )
+                }
             }
-        }
+        )
 
         Text(
             text = stringResource(R.string.constellation_subtitle),
@@ -158,7 +162,7 @@ fun ConstellationScreen() {
         BoxWithConstraints(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f)
+                .aspectRatio(MapAspectRatio)
                 .background(
                     color = mapColor,
                     shape = RoundedCornerShape(18.dp)

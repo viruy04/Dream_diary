@@ -40,6 +40,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.dreamdiary.R
+import com.example.dreamdiary.components.ScreenHeader
 
 private data class Achievement(
     val titleRes: Int,
@@ -113,7 +114,7 @@ private val achievements = listOf(
 )
 
 @Composable
-fun AchievementsScreen() {
+fun AchievementsScreen(onBack: () -> Unit = {}) {
     var selectedAchievement by remember {
         mutableStateOf<Achievement?>(null)
     }
@@ -137,11 +138,9 @@ fun AchievementsScreen() {
                     .fillMaxWidth()
                     .padding(top = 20.dp, bottom = 8.dp)
             ) {
-                Text(
-                    text = stringResource(R.string.achievements_title),
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground
+                ScreenHeader(
+                    title = stringResource(R.string.achievements_title),
+                    onBack = onBack
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))

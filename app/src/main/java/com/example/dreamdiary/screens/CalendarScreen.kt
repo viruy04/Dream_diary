@@ -1,5 +1,6 @@
 package com.example.dreamdiary.screens
 
+import com.example.dreamdiary.components.ScreenHeader
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -46,7 +47,7 @@ private data class CalendarDream(
 )
 
 @Composable
-fun CalendarScreen() {
+fun CalendarScreen(onBack: () -> Unit = {}) {
     val today = Calendar.getInstance()
 
     var displayedMonth by remember {
@@ -97,11 +98,9 @@ fun CalendarScreen() {
             .verticalScroll(rememberScrollState())
             .padding(20.dp)
     ) {
-        Text(
-            text = stringResource(R.string.calendar_title),
-            style = MaterialTheme.typography.headlineMedium,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onBackground
+        ScreenHeader(
+            title = stringResource(R.string.calendar_title),
+            onBack = onBack
         )
 
         Spacer(modifier = Modifier.height(20.dp))

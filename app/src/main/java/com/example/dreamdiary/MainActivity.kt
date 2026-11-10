@@ -9,6 +9,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.navigation.compose.rememberNavController
+import com.example.dreamdiary.navigation.Destination
 import com.example.dreamdiary.navigation.NavigationBarExample
 import com.example.dreamdiary.ui.theme.DreamDiaryTheme
 import com.example.dreamdiary.ui.theme.ThemeMode
@@ -28,8 +29,14 @@ class MainActivity : ComponentActivity() {
             DreamDiaryTheme(themeMode = themeMode) {
                 val navController = rememberNavController()
 
+                // Пока данные не сохраняем: стартовый экран показывается при каждом запуске.
+                // Чтобы временно пропускать его при работе над другими экранами,
+                // замените на Destination.Home.route
+                val startDestination = Destination.Welcome.route
+
                 NavigationBarExample(
                     navController = navController,
+                    startDestination = startDestination,
                     themeMode = themeMode,
                     onThemeChange = { newTheme ->
                         themeModeName = newTheme.name
