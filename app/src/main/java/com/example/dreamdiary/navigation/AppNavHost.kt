@@ -13,12 +13,14 @@ import com.example.dreamdiary.screens.DreamsScreen
 import com.example.dreamdiary.screens.HomeScreen
 import com.example.dreamdiary.screens.ProfileScreen
 import com.example.dreamdiary.screens.StatisticsScreen
+import com.example.dreamdiary.screens.WelcomeScreen
 import com.example.dreamdiary.ui.theme.ThemeMode
 
 @Composable
 fun AppNavHost(
     navController: NavHostController,
     modifier: Modifier = Modifier,
+    startDestination: String = Destination.Home.route,
     themeMode: ThemeMode,
     onThemeChange: (ThemeMode) -> Unit,
     onAddDreamClick: () -> Unit = {}
@@ -35,13 +37,25 @@ fun AppNavHost(
 
     NavHost(
         navController = navController,
-        startDestination = Destination.Home.route,
+        startDestination = startDestination,
         modifier = modifier,
         enterTransition = { navEnter() },
         exitTransition = { navExit() },
         popEnterTransition = { navPopEnter() },
         popExitTransition = { navPopExit() }
     ) {
+        composable(Destination.Welcome.route) {
+            WelcomeScreen(
+                onContinue = {
+                    navController.navigate(Destination.Home.route) {
+                        // Стартовый экран убираем из стека: «назад» с главной закрывает приложение
+                        popUpTo(Destination.Welcome.route) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                }
+            )
+        }
+
         composable(Destination.Home.route) {
             HomeScreen(navController = navController, onAddDreamClick = onAddDreamClick)
         }

@@ -39,6 +39,7 @@ object NavMotion {
 }
 
 /** Группы маршрутов, от которых зависит тип перехода. */
+/** Группы маршрутов, от которых зависит тип перехода. */
 object NavRoutes {
     /** Вкладки нижней панели. */
     val tabs: Set<String> = setOf(
@@ -47,11 +48,12 @@ object NavRoutes {
         Destination.Profile.route
     )
 
-    /** Экраны онбординга. В проекте их пока нет - добавьте сюда маршруты, когда появятся. */
-    val onboarding: Set<String> = emptySet()
+    /** Экраны онбординга: переход с них на главную - fade, а не слайд. */
+    val onboarding: Set<String> = setOf(Destination.Welcome.route)
 
     /** Экраны, на которых нижняя панель скрыта. */
     val bottomBarHidden: Set<String> = setOf(
+        Destination.Welcome.route,
         Destination.Calendar.route,
         Destination.Statistics.route,
         Destination.Constellation.route,
