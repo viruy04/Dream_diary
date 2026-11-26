@@ -25,9 +25,7 @@ fun AppNavHost(
     onThemeChange: (ThemeMode) -> Unit,
     onAddDreamClick: () -> Unit = {}
 ) {
-    // «Назад» для кнопки в интерфейсе. Системную кнопку и жест обрабатывает сам NavHost
-    // (BackHandler здесь не нужен - он бы отключил предиктивную анимацию жеста).
-    // Проверка состояния защищает от двойного нажатия во время анимации.
+    // «Назад» для кнопки в интерфейсе
     val goBack: () -> Unit = {
         val entry = navController.currentBackStackEntry
         if (entry?.lifecycle?.currentState == Lifecycle.State.RESUMED) {
