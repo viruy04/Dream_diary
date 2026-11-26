@@ -11,6 +11,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.navigation.compose.rememberNavController
 import com.example.dreamdiary.data.DreamRepository
+import com.example.dreamdiary.data.ThemeStorage
 import com.example.dreamdiary.navigation.Destination
 import com.example.dreamdiary.navigation.NavigationBarExample
 import com.example.dreamdiary.ui.theme.DreamDiaryTheme
@@ -22,8 +23,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
+            // Тема читается из SharedPreferences, поэтому переживает перезапуск приложения
             var themeModeName by rememberSaveable {
-                mutableStateOf(ThemeMode.SYSTEM.name)
+                mutableStateOf(ThemeStorage.load(applicationContext).name)
             }
 
             val themeMode = ThemeMode.valueOf(themeModeName)
@@ -44,6 +46,7 @@ class MainActivity : ComponentActivity() {
                     themeMode = themeMode,
                     onThemeChange = { newTheme ->
                         themeModeName = newTheme.name
+                        ThemeStorage.save(applicationContext, newTheme)
                     }
                 )
             }

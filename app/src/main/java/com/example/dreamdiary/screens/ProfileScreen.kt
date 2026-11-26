@@ -56,6 +56,10 @@ import androidx.navigation.NavHostController
 import com.example.dreamdiary.R
 import com.example.dreamdiary.navigation.Destination
 import com.example.dreamdiary.ui.theme.ThemeMode
+import androidx.compose.ui.platform.LocalContext
+import com.example.dreamdiary.data.DateUtils
+import com.example.dreamdiary.data.DreamRepository
+import com.example.dreamdiary.data.RuText
 
 @Composable
 fun ProfileScreen(
@@ -64,6 +68,14 @@ fun ProfileScreen(
     onThemeChange: (ThemeMode) -> Unit
 ) {
     var showThemeDialog by remember { mutableStateOf(false) }
+
+    // Данные профиля и активность читаются из БД; version меняется после каждой записи
+    val context = LocalContext.current
+    val repository = remember(context) { DreamRepository.get(context) }
+    val profile = remember(repository.version) { repository.getProfile() }
+    val dreamsCount = remember(repository.version) { repository.getStatistics().total }
+    val constellationsCount = remember(repository.version) { repository.getConstellationCount() }
+    val achievementsCount = remember(repository.version) { repository.getUnlockedAchievementsCount() }
 
     // Автоматически сбрасываем окно темы при любом уходе с экрана Профиля
     DisposableEffect(Unit) {
@@ -131,7 +143,7 @@ fun ProfileScreen(
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = "А",
+                            text = profile?.name?.firstOrNull()?.uppercase() ?: "?",
                             fontSize = 32.sp,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSecondary
@@ -159,7 +171,7 @@ fun ProfileScreen(
 
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = stringResource(R.string.user_name_default),
+                        text = profile?.name ?: stringResource(R.string.user_name_default),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
@@ -168,17 +180,10 @@ fun ProfileScreen(
                     Spacer(modifier = Modifier.height(2.dp))
 
                     Text(
-                        text = stringResource(R.string.user_age_default),
+                        text = profile?.let { RuText.years(DateUtils.ageYears(it.birthDate)) }
+                            ?: stringResource(R.string.user_age_default),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
-                    )
-                }
-
-                IconButton(onClick = { }) {
-                    Icon(
-                        imageVector = Icons.Default.Edit,
-                        contentDescription = "Редактировать профиль",
-                        tint = MaterialTheme.colorScheme.primary
                     )
                 }
             }
@@ -216,17 +221,17 @@ fun ProfileScreen(
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
                 ProfileStatisticItem(
-                    value = "12",
+                    value = dreamsCount.toString(),
                     label = stringResource(R.string.stat_dreams),
                     icon = Icons.Default.NightlightRound
                 )
                 ProfileStatisticItem(
-                    value = "5",
+                    value = constellationsCount.toString(),
                     label = stringResource(R.string.stat_constellations),
                     icon = Icons.Default.AutoAwesome
                 )
                 ProfileStatisticItem(
-                    value = "3",
+                    value = achievementsCount.toString(),
                     label = stringResource(R.string.stat_achievements),
                     icon = Icons.Default.EmojiEvents
                 )
