@@ -37,9 +37,12 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalContext
+import com.example.dreamdiary.data.DateUtils
+import com.example.dreamdiary.data.DreamRepository
 
 /**
- * Стартовый экран: только интерфейс, без проверок и сохранения.
+ * Стартовый экран первого запуска: имя и дата рождения сохраняются в БД (таблица profile).
  * Фон (картинку welcome_bg) рисует NavigationBarExample под всеми экранами.
  */
 @Composable
@@ -48,9 +51,13 @@ fun WelcomeScreen(
 ) {
     val colors = MaterialTheme.colorScheme
 
-    // Состояние нужно только для того, чтобы в полях можно было печатать
+    val context = LocalContext.current
+    val repository = remember(context) { DreamRepository.get(context) }
+
     var name by remember { mutableStateOf("") }
     var birthDate by remember { mutableStateOf("") }
+    var nameError by remember { mutableStateOf(false) }
+    var dateError by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -94,8 +101,15 @@ fun WelcomeScreen(
 
                 OutlinedTextField(
                     value = name,
-                    onValueChange = { name = it },
+                    onValueChange = {
+                        name = it
+                        nameError = false
+                    },
                     label = { Text("Имя") },
+                    isError = nameError,
+                    supportingText = if (nameError) {
+                        { Text("Введите имя") }
+                    } else null,
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(
                         capitalization = KeyboardCapitalization.Words,
@@ -108,10 +122,19 @@ fun WelcomeScreen(
 
                 OutlinedTextField(
                     value = birthDate,
-                    onValueChange = { birthDate = it },
+                    onValueChange = {
+                        birthDate = it
+                        dateError = false
+                    },
                     label = { Text("Дата рождения") },
                     placeholder = { Text("ДД.ММ.ГГГГ") },
-                    supportingText = { Text("Формат: ДД.ММ.ГГГГ, например 07.03.2001") },
+                    isError = dateError,
+                    supportingText = {
+                        Text(
+                            if (dateError) "Введите существующую дату в формате ДД.ММ.ГГГГ"
+                            else "Формат: ДД.ММ.ГГГГ, например 07.03.2001"
+                        )
+                    },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
@@ -142,7 +165,16 @@ fun WelcomeScreen(
                 Spacer(modifier = Modifier.height(24.dp))
 
                 Button(
-                    onClick = onContinue,
+                    onClick = {
+                        val trimmedName = name.trim()
+                        val birthIso = DateUtils.parseBirthDate(birthDate)
+                        nameError = trimmedName.isEmpty()
+                        dateError = birthIso == null
+                        if (!nameError && birthIso != null) {
+                            repository.saveProfile(trimmedName, birthIso)
+                            onContinue()
+                        }
+                    },
                     shape = RoundedCornerShape(16.dp),
                     modifier = Modifier
                         .fillMaxWidth()

@@ -65,7 +65,7 @@ fun NavigationBarExample(
 
     Box(modifier = Modifier.fillMaxSize()) {
 
-        // Плавная смена фона без «щелчка»
+        // Плавная смена фона
         Crossfade(
             targetState = backgroundRes,
             animationSpec = tween(300),

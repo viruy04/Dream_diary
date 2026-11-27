@@ -6,9 +6,12 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.navigation.compose.rememberNavController
+import com.example.dreamdiary.data.DreamRepository
+import com.example.dreamdiary.data.ThemeStorage
 import com.example.dreamdiary.navigation.Destination
 import com.example.dreamdiary.navigation.NavigationBarExample
 import com.example.dreamdiary.ui.theme.DreamDiaryTheme
@@ -20,8 +23,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
+            // Тема читается из SharedPreferences, поэтому переживает перезапуск приложения
             var themeModeName by rememberSaveable {
-                mutableStateOf(ThemeMode.SYSTEM.name)
+                mutableStateOf(ThemeStorage.load(applicationContext).name)
             }
 
             val themeMode = ThemeMode.valueOf(themeModeName)
@@ -29,10 +33,12 @@ class MainActivity : ComponentActivity() {
             DreamDiaryTheme(themeMode = themeMode) {
                 val navController = rememberNavController()
 
-                // Пока данные не сохраняем: стартовый экран показывается при каждом запуске.
-                // Чтобы временно пропускать его при работе над другими экранами,
-                // замените на Destination.Home.route
-                val startDestination = Destination.Welcome.route
+                // Профиль создаётся при первом запуске: пока его нет в БД - стартовый экран,
+                // потом сразу главная
+                val repository = remember { DreamRepository.get(applicationContext) }
+                val startDestination = remember {
+                    if (repository.hasProfile()) Destination.Home.route else Destination.Welcome.route
+                }
 
                 NavigationBarExample(
                     navController = navController,
@@ -40,6 +46,7 @@ class MainActivity : ComponentActivity() {
                     themeMode = themeMode,
                     onThemeChange = { newTheme ->
                         themeModeName = newTheme.name
+                        ThemeStorage.save(applicationContext, newTheme)
                     }
                 )
             }
